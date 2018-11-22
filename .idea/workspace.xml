@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="89f85305-ba7b-42af-aab0-74e28e22fb63" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/modules/grunfes/grunfes.info" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/modules/grunfes/grunfes.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/modules/grunfes/grunfes.install" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/modules/grunfes/grunfes.install" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/modules/grunfes/grunfes.module" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/modules/grunfes/grunfes.module" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/modules/grunfes/rules/group_auto_join.json" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/modules/grunfes/rules/group_auto_join.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/modules/grunfes/rules/update_matches_on_show_update.json" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/modules/grunfes/rules/update_matches_on_show_update.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/LICENSE.txt" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/LICENSE.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/README.txt" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/README.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/css/bootstrap.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/css/bootstrap.min.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/css/flexslider.css" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/css/flexslider.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/images/arrow-down.svg" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/images/arrow-down.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/images/check-mark.svg" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/images/check-mark.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/images/slide-image-1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/images/slide-image-1.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/images/x-hover.svg" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/images/x-hover.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/images/x.svg" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/images/x.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/js/bootstrap.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/js/bootstrap.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/js/custom.js" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/js/custom.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/js/html5.js" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/js/html5.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/js/jquery.flexslider.js" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/js/jquery.flexslider.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/js/slide.js" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/js/slide.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/js/superfish.js" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/js/superfish.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/nexus.info" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/nexus.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/style2.css" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/style2.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/style3.css" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/style3.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/template.php" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/template.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/templates/block.tpl.php" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/templates/block.tpl.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/templates/comment-wrapper.tpl.php" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/templates/comment-wrapper.tpl.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/templates/comment.tpl.php" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/templates/comment.tpl.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/templates/html.tpl.php" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/templates/html.tpl.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/templates/maintenance-page.tpl.php" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/templates/maintenance-page.tpl.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/templates/node--forum.tpl.php" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/templates/node--forum.tpl.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/templates/node.tpl.php" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/templates/node.tpl.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/templates/page.tpl.php" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/templates/page.tpl.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/templates/region.tpl.php" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/templates/region.tpl.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/templates/views-view--picks-template--block-1.tpl.php" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/templates/views-view--picks-template--block-1.tpl.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/templates/views-view--picks-template--block-3.tpl.php" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/templates/views-view--picks-template--block-3.tpl.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/templates/views-view-fields--picks-template--block-1.tpl.php" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/templates/views-view-fields--picks-template--block-1.tpl.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/templates/views-view-fields--picks-template--block-3.tpl.php" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/templates/views-view-fields--picks-template--block-3.tpl.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/sites/all/themes/nexus/theme-settings.php" beforeDir="false" afterPath="$PROJECT_DIR$/html/sites/all/themes/nexus/theme-settings.php" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DrupalConfiguration" enabled="true" version="7">
+    <drupalPath>D:\dev\pwp\html</drupalPath>
+  </component>
+  <component name="FileEditorManager">
+    <splitter split-orientation="vertical" split-proportion="0.5">
+      <split-first>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/html/sites/all/modules/grunfes/grunfes.module">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="79">
+                  <caret line="1398" column="42" lean-forward="true" selection-start-line="1398" selection-start-column="42" selection-end-line="1398" selection-end-column="42" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/html/sites/all/themes/nexus/templates/ds-1col--node-match-simple.tpl.php">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="506">
+                  <caret line="53" column="8" selection-start-line="53" selection-start-column="8" selection-end-line="53" selection-end-column="8" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/html/sites/all/themes/nexus/templates/ds-1col--node-show-simple.tpl.php">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="299">
+                  <caret line="113" column="9" lean-forward="true" selection-start-line="113" selection-start-column="9" selection-end-line="113" selection-end-column="9" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/html/sites/all/modules/grunfes/grunfes.module">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="134">
+                  <caret line="1435" column="16" selection-start-line="1435" selection-start-column="16" selection-end-line="1435" selection-end-column="16" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>render</find>
+      <find>calcula</find>
+      <find>GRUNFES_NO_CONTEST_PICK_VALUE</find>
+      <find>mitb</find>
+      <find>grunfes_pick_pool</find>
+      <find>grunfes_mitb_cash_in_access</find>
+      <find>grunfes_mitb_cash_in</find>
+      <find>grunfes_render_matches</find>
+      <find>$show_published</find>
+      <find>$pool_locked</find>
+      <find>$show_expired</find>
+      <find>publish_show</find>
+      <find>grunfes_publish_show</find>
+      <find>fieldquer</find>
+    </findStrings>
+    <dirStrings>
+      <dir>D:\dev\pwp\html\sites\all\themes\nexus\templates</dir>
+    </dirStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/html/sites/all/themes/nexus/templates/views-view-fields--picks-template--block-3.tpl.php" />
+        <option value="$PROJECT_DIR$/html/sites/all/themes/nexus/templates/views-view--picks-template--block-3.tpl.php" />
+        <option value="$PROJECT_DIR$/html/sites/all/themes/nexus/templates/ds-1col--node-show-simple.tpl.php" />
+        <option value="$PROJECT_DIR$/html/sites/all/modules/grunfes/grunfes.module" />
+      </list>
+    </option>
+  </component>
+  <component name="PhpDebugGeneral" xdebug_debug_port="9001" listening_started="true" />
+  <component name="PhpServers">
+    <servers>
+      <server host="pwp.localhost" id="f01715ba-41c1-4963-82a8-9ff79be7f32f" name="pwp.localhost" use_path_mappings="true">
+        <path_mappings>
+          <mapping local-root="$PROJECT_DIR$/html" remote-root="/var/www/html" />
+        </path_mappings>
+      </server>
+    </servers>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="7">
+    <option name="x" value="104" />
+    <option name="y" value="-30" />
+    <option name="width" value="1654" />
+    <option name="height" value="987" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="pwp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pwp" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="pwp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pwp" type="462c0819:PsiDirectoryNode" />
+              <item name="html" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="pwp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pwp" type="462c0819:PsiDirectoryNode" />
+              <item name="html" type="462c0819:PsiDirectoryNode" />
+              <item name="sites" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="pwp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pwp" type="462c0819:PsiDirectoryNode" />
+              <item name="html" type="462c0819:PsiDirectoryNode" />
+              <item name="sites" type="462c0819:PsiDirectoryNode" />
+              <item name="all" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="pwp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pwp" type="462c0819:PsiDirectoryNode" />
+              <item name="html" type="462c0819:PsiDirectoryNode" />
+              <item name="sites" type="462c0819:PsiDirectoryNode" />
+              <item name="all" type="462c0819:PsiDirectoryNode" />
+              <item name="modules" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="pwp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pwp" type="462c0819:PsiDirectoryNode" />
+              <item name="html" type="462c0819:PsiDirectoryNode" />
+              <item name="sites" type="462c0819:PsiDirectoryNode" />
+              <item name="all" type="462c0819:PsiDirectoryNode" />
+              <item name="themes" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="pwp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pwp" type="462c0819:PsiDirectoryNode" />
+              <item name="html" type="462c0819:PsiDirectoryNode" />
+              <item name="sites" type="462c0819:PsiDirectoryNode" />
+              <item name="all" type="462c0819:PsiDirectoryNode" />
+              <item name="themes" type="462c0819:PsiDirectoryNode" />
+              <item name="nexus" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="pwp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pwp" type="462c0819:PsiDirectoryNode" />
+              <item name="html" type="462c0819:PsiDirectoryNode" />
+              <item name="sites" type="462c0819:PsiDirectoryNode" />
+              <item name="all" type="462c0819:PsiDirectoryNode" />
+              <item name="themes" type="462c0819:PsiDirectoryNode" />
+              <item name="nexus" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/html" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="reference.webide.settings.project.settings.php.debug" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\dev\pwp\html\sites\all\themes\nexus\templates" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="89f85305-ba7b-42af-aab0-74e28e22fb63" name="Default Changelist" comment="" />
+      <created>1539706730636</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1539706730636</updated>
+      <workItem from="1539706737679" duration="2052000" />
+      <workItem from="1542904932483" duration="7850000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="9902000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.20735608" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3290398" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.30119178" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="9" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Terminal" order="10" />
+      <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Database" order="3" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/html/sites/all/themes/nexus/templates/ds-1col--node-show-simple.tpl.php</url>
+          <line>53</line>
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/html/sites/all/modules/grunfes/grunfes.module</url>
+          <line>1125</line>
+          <option name="timeStamp" value="16" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/html/sites/all/modules/grunfes/grunfes.module</url>
+          <line>206</line>
+          <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/html/sites/all/modules/grunfes/grunfes.module</url>
+          <line>171</line>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/html/sites/all/modules/grunfes/grunfes.module</url>
+          <line>550</line>
+          <option name="timeStamp" value="24" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/html/sites/all/modules/grunfes/grunfes.module</url>
+          <line>1433</line>
+          <option name="timeStamp" value="38" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/html/sites/all/modules/grunfes/grunfes.install">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/html/sites/all/themes/nexus/templates/views-view-fields--picks-template--block-3.tpl.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="88">
+          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/html/sites/all/themes/nexus/templates/views-view--picks-template--block-3.tpl.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="462">
+          <caret line="77" column="51" lean-forward="true" selection-start-line="75" selection-start-column="8" selection-end-line="77" selection-end-column="51" />
+          <folding>
+            <element signature="e#7#909#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="12" column="14" lean-forward="true" selection-start-line="12" selection-start-column="14" selection-end-line="12" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/html/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="22">
+          <caret line="1" column="20" lean-forward="true" selection-start-line="1" selection-start-column="2" selection-end-line="1" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/html/sites/default/settings.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-4092" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/html/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="242">
+          <caret line="20" selection-start-line="20" selection-end-line="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/html/includes/common.inc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="217">
+          <caret line="6153" column="9" selection-start-line="6153" selection-start-column="9" selection-end-line="6153" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/html/sites/all/themes/nexus/templates/node--pool.tpl.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="22">
+          <caret line="100" column="19" selection-start-line="100" selection-start-column="19" selection-end-line="100" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/html/sites/all/themes/nexus/templates/views-view--picks-template--block-1.tpl.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-132">
+          <caret line="82" column="6" lean-forward="true" selection-start-line="82" selection-start-column="6" selection-end-line="134" selection-end-column="21" />
+          <folding>
+            <element signature="e#2264#5116#0#PHP" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/html/sites/all/themes/nexus/templates/ds-1col--node-match-simple.tpl.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="506">
+          <caret line="53" column="8" selection-start-line="53" selection-start-column="8" selection-end-line="53" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/html/sites/all/themes/nexus/templates/ds-1col--node-show-simple.tpl.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="299">
+          <caret line="113" column="9" lean-forward="true" selection-start-line="113" selection-start-column="9" selection-end-line="113" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/html/sites/all/modules/grunfes/grunfes.module">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="134">
+          <caret line="1435" column="16" selection-start-line="1435" selection-start-column="16" selection-end-line="1435" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

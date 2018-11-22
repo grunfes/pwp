@@ -1,0 +1,6 @@
+name = "PWP functions"
+description = "Set of functions for Pick'em game"
+package = "PWP functions"
+core = "7.x"
+version = "7.x-1.0"
+

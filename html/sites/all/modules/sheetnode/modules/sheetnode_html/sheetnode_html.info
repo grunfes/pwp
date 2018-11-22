@@ -1,0 +1,14 @@
+name = Sheetnode HTML
+description = Provides HTML TABLE import/export support for Sheetnode.
+package = Sheetnode
+dependencies[] = sheetnode
+dependencies[] = querypath
+dependencies[] = format_number
+core = 7.x
+
+; Information added by Drupal.org packaging script on 2016-12-02
+version = "7.x-2.0-alpha2"
+core = "7.x"
+project = "sheetnode"
+datestamp = "1480714086"
+

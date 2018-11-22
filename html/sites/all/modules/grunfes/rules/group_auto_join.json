@@ -1,0 +1,9 @@
+{ "rules_group_auto_join" : {
+  "LABEL" : "Group auto join",
+  "PLUGIN" : "reaction rule",
+  "OWNER" : "rules",
+  "REQUIRES" : [ "og", "rules" ],
+  "ON" : { "node_insert--pool" : { "bundle" : "pool" } },
+  "DO" : [ { "og_subcribe_user" : { "user" : "1", "group" : [ "node" ] } } ]
+}
+}

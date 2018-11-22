@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * Adds score editor role
+ *
+ * @throws \DrupalUpdateException when creating score editor role fails.
+ */
+function grunfes_update_7000() {
+  $role_name = 'score editor';
+
+  if (empty(user_role_load_by_name($role_name))) {
+    $role = new stdClass();
+    $role->name = $role_name;
+
+    $result = user_role_save($role);
+
+    if ($result === FALSE) {
+      throw new \DrupalUpdateException("Error creating role: ${role_name}");
+    }
+  }
+
+  $role = user_role_load_by_name($role_name);
+
+  user_role_grant_permissions($role->rid, array('administer group'));
+}
+
+/**
+ * Activate rules module
+ *
+ * @throws \DrupalUpdateException when module activation fails.
+ */
+function grunfes_update_7001() {
+  if (!module_enable(array(
+    'rules',
+    'rules_admin',
+    'rules_scheduler'
+  ))) {
+    throw new \DrupalUpdateException('Error activating rules module.');
+  }
+}

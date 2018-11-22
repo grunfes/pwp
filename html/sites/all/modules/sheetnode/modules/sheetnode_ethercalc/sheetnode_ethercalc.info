@@ -1,0 +1,13 @@
+name = Sheetnode EtherCalc
+description = <a href="http://www.ethercalc.org/">EtherCalc</a> integration for multi-user editing.
+package = Sheetnode
+dependencies[] = sheetnode
+core = 7.x
+configure = admin/config/content/sheetnode/ethercalc
+
+; Information added by Drupal.org packaging script on 2016-12-02
+version = "7.x-2.0-alpha2"
+core = "7.x"
+project = "sheetnode"
+datestamp = "1480714086"
+

@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  db:
+    image: mariadb:10.1
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306"
+    volumes:
+      - "db_data:/var/lib/mysql"
+
+  php:
+    build:
+      context: ./docker/php
+    volumes:
+      - "./html:/var/www/html"
+
+  web:
+    build:
+      context: ./docker/web
+    depends_on:
+      - db
+      - php
+    ports:
+      - "8080:80"
+    volumes:
+      - "./html:/var/www/html:ro"
+
+volumes:
+  db_data:

@@ -1,0 +1,15 @@
+name = Sheetnode PHPExcel
+description = Provides PHPExcel integration with Sheetnode.
+package = Sheetnode
+dependencies[] = sheetnode 
+core = 7.x
+configure = admin/config/content/sheetnode/phpexcel
+
+files[] = sheetnode_phpexcel_plugin_style.inc
+
+; Information added by Drupal.org packaging script on 2016-12-02
+version = "7.x-2.0-alpha2"
+core = "7.x"
+project = "sheetnode"
+datestamp = "1480714086"
+

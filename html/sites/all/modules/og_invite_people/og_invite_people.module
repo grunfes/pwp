@@ -1,0 +1,246 @@
+<?php
+/**
+ * @file
+ * OG Invite People
+ *
+ * OG 7.x-2.x required
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function og_invite_people_menu() {
+  $items = array();
+
+  $items['admin/config/group/og-invite-people'] = array(
+    'title' => 'OG invite people settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('og_invite_people_settings_form'),
+    'access arguments' => array('administer og_invite_people'),
+    'file' => 'og_invite_people.admin.inc',
+  );
+
+  $items['group/%/%/admin/people/invite'] = array(
+    'title' => 'Invite People',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('_og_invite_people_new_users_form', 1, 2),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 4,
+    'access callback' => 'og_invite_people_user_access_group',
+    'access arguments' => array('invite people', 1, 2),
+    'file' => 'og_invite_people.form.inc',
+  );
+
+  $add_invite_tab = variable_get('og_invite_people_add_invite_tab', 0);
+  if ($add_invite_tab) {
+    foreach (og_get_all_group_entity() as $entity_type => $value) {
+      if ($entity_type == 'taxonomy_term') {
+        $path = 'taxonomy/term/%/invite';
+        $argument = 2;
+      }
+      else {
+        $path = "$entity_type/%/invite";
+        $argument = 1;
+      }
+      $items[$path] = array(
+        'page callback' => 'drupal_get_form',
+        'title' => 'Invite People',
+        'page arguments' => array('_og_invite_people_new_users_form', $entity_type, $argument),
+        'type' => MENU_LOCAL_TASK,
+        'weight' => 5,
+        'access callback' => 'og_invite_people_user_access_group',
+        'access arguments' => array('invite people', $entity_type, $argument),
+        'file' => 'og_invite_people.form.inc',
+      );
+    }
+  }
+
+  return $items;
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function og_invite_people_menu_alter(&$items) {
+  $remove_og_tab = variable_get('og_invite_people_remove_og_tab', 0);
+  if ($remove_og_tab) {
+    foreach (og_get_all_group_entity() as $entity_type => $value) {
+      if ($entity_type == 'taxonomy_term') {
+        $path = 'taxonomy/term/%/group';
+      }
+      else {
+        $path = "$entity_type/%/group";
+      }
+      if (isset($items[$path])) {
+        $items[$path]['access callback'] = FALSE;
+        unset($items[$path]['access arguments']);
+      }
+    }
+  }
+}
+
+/**
+ * Implement hook_og_permission().
+ */
+function og_invite_people_permission() {
+  $items = array();
+  $items['administer og_invite_people'] = array(
+    'title' => t('Administer OG Invite People'),
+    );
+  return $items;
+}
+
+/**
+ * Implements hook_og_ui_get_group_admin()
+ */
+function og_invite_people_og_ui_get_group_admin($group_type, $gid) {
+  $items = array();
+  if (og_user_access($group_type, $gid, 'invite people')) {
+    $items['og_invite_people'] = array(
+      'title' => t('Invite People'),
+      'description' => t('Invited users will be created and notified by email.'),
+      'href' => 'admin/people/invite',
+    );
+  }
+  return $items;
+}
+
+/**
+ * Check if entity is a group, and user has permission - Access.
+ */
+function og_invite_people_user_access_group($perm, $group_type, $gid) {
+  $group = entity_load_single($group_type, $gid);
+  if (!$group || !og_is_group($group_type, $group)) {
+    return FALSE;
+  }
+
+  // Extract the group's bundle.
+  list(, , $bundle) = entity_extract_ids($group_type, $group);
+  // Verify the bundle has roles
+  if (!og_roles($group_type, $bundle, $gid)) {
+    return FALSE;
+  }
+
+  $entity_info = entity_get_info($group_type);
+  if (!$group_type || !$entity_info) {
+    // Not a valid entity type.
+    return FALSE;
+  }
+  return og_is_group($group_type, $gid) && og_user_access($group_type, $gid, $perm);
+}
+
+
+/**
+ * Implement hook_og_permission().
+ */
+function og_invite_people_og_permission() {
+  $items = array();
+  $items['invite people'] = array(
+    'title' => t('Invite people'),
+    'description' => t('Users may invite other users to the group without approval.'),
+    'default role' => array(OG_ADMINISTRATOR_ROLE),
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function og_invite_people_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'ctools' && $plugin == 'content_types') {
+    return 'ctools/content_types';
+  }
+}
+
+/**
+ * Implements hook_mail().
+ */
+function og_invite_people_mail($key, &$message, $params) {
+  $language = $message['language'];
+  $og_entity_type = $params['group_type'];
+  $og_entity = entity_load_single($og_entity_type, $params['gid']);
+  $variables = array(
+    'user' => $params['account'],
+    $og_entity_type => $og_entity,
+  );
+  $message['subject'] .= _og_invite_people_email_text($key . '_subject', $language, $variables);
+  $message['body'][] = _og_invite_people_email_text($key . '_body', $language, $variables);
+}
+
+/**
+ * Returns a mail string for a variable name.
+ *
+ * Used by og_invite_people_mail() and the settings forms to retrieve strings.
+ */
+function _og_invite_people_email_text($key, $language = NULL, $variables = array(), $replace = TRUE, $use_i18n = TRUE) {
+  $langcode = isset($language) ? $language->language : NULL;
+
+  $variable_name = 'og_invite_people_mail_' . $key;
+  // @see i18n_user_mail_alter().
+  if ($use_i18n && module_exists('i18n_variable')
+    && $admin_setting = i18n_variable_get($variable_name, $langcode, FALSE)
+  ) {
+    // There's an i18n variable override..
+    $text = $admin_setting;
+  }
+  // @see _user_mail_text().
+  elseif ($admin_setting = variable_get($variable_name, FALSE)) {
+    // An admin setting overrides the default string.
+    $text = $admin_setting;
+  }
+  else {
+    $t_options = array('langcode' => $langcode);
+    switch($key) {
+      case 'existing_user_new_group_subject':
+        $text = t(variable_get('og_invite_people_email_existing_subject', 'Membership details for [user:name] at [site:name] in group [node:title]'), array(), $t_options);
+        break;
+
+      case 'existing_user_new_group_body':
+        $text = t(variable_get('og_invite_people_email_existing_body', "[user:name],
+
+You have been added as a member to [@node:title]. You can log in and view your memberships at [site:login-url].
+
+--  [site:name] team"), array(), $t_options);
+        break;
+
+      case 'new_user_new_group_subject':
+        $text = t(variable_get('og_invite_people_email_new_subject', 'Membership details for [user:name] at [site:name]'), array(), $t_options);
+        break;
+      case 'new_user_new_group_body':
+        $text = t(variable_get('og_invite_people_email_new_body', "[user:name],
+
+A site administrator at [site:name] has created an account for you. You may now log in by clicking this link or copying and pasting it to your browser:
+
+[user:one-time-login-url]
+
+This link can only be used once to log in and will lead you to a page where you can set your password.
+
+After setting your password, you will be able to log in at [site:login-url] in the future using:
+
+username: [user:name]
+password: Your password
+
+You also have been added as a member to [node:title].
+
+--  [site:name] team"), array(), $t_options);
+
+        break;
+    }
+  }
+
+  if ($replace) {
+    // We do not sanitize the token replacement, since the output of this
+    // replacement is intended for an e-mail message, not a web browser.
+    // @see _user_mail_text(), so this should be safe.
+    $options = array('language' => $language,'sanitize' => FALSE,'clear' => TRUE);
+    if (module_exists('i18n_variable')) {
+      $options['callback'] = 'i18n_user_user_mail_tokens';
+    }
+    else {
+      $options['callback'] = 'user_mail_tokens';
+    }
+    return token_replace($text, $variables, $options);
+  }
+
+  return $text;
+}

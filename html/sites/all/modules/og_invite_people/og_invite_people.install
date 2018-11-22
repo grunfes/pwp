@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * Implements hook_uninstall().
+ */
+function og_invite_people_uninstall() {
+  variable_del('og_invite_people_email_existing_subject');
+  variable_del('og_invite_people_email_existing_body');
+  variable_del('og_invite_people_email_new_subject');
+  variable_del('og_invite_people_email_new_body');
+}
+
+/**
+ * Set variables for email templates.
+ */
+function og_invite_people_update_7001() {
+  $oip = array();
+  $oip['existing_subject'] = 'Membership details for [user:name] at [site:name]';
+  $oip['existing_body'] = '[user:name],
+
+You have been added as a member to [@node:title]. You can log in and view your memberships at [site:login-url].
+
+--  [site:name] team';
+
+  $oip['new_subject'] = 'Membership details for [user:name] at [site:name] in group [node:title]';
+
+  $oip['new_body'] = '[user:name],
+
+A site administrator at [site:name] has created an account for you. You may now log in by clicking this link or copying and pasting it to your browser:
+
+[user:one-time-login-url]
+
+This link can only be used once to log in and will lead you to a page where you can set your password.
+
+After setting your password, you will be able to log in at [site:login-url] in the future using:
+
+username: [user:name]
+password: Your password
+
+You also have been added as a member to [node:title].
+
+--  [site:name] team';
+
+  variable_set('og_invite_people_email_existing_subject', $oip['existing_subject']);
+  variable_set('og_invite_people_email_existing_body', $oip['existing_body']);
+  variable_set('og_invite_people_email_new_subject', $oip['new_subject']);
+  variable_set('og_invite_people_email_new_body', $oip['new_body']);
+}

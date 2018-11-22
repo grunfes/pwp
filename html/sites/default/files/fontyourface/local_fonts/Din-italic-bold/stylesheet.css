@@ -1,0 +1,7 @@
+@font-face {
+  font-family: 'Din';
+  src: url("FFDINPro-BoldItalic.eot");
+  src: url("FFDINPro-BoldItalic.eot?#iefix") format("embedded-opentype"), url("FFDINPro-BoldItalic.ttf") format("truetype"), url("FFDINPro-BoldItalic.woff") format("woff"), url("FFDINPro-BoldItalic.svg#FFDINPro-BoldItalic") format("svg");
+  font-style: italic;
+  font-weight: bold;
+}

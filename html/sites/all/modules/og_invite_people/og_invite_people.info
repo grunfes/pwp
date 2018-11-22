@@ -1,0 +1,14 @@
+name = OG Invite People
+description = "Create and invite users to OG groups."
+package = "Organic groups"
+core = 7.x
+project = "og_invite_people"
+dependencies[] = og
+configure = admin/config/group/og-invite-people
+
+; Information added by Drupal.org packaging script on 2015-09-29
+version = "7.x-2.0-alpha1"
+core = "7.x"
+project = "og_invite_people"
+datestamp = "1443539344"
+
