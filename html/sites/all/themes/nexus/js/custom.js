@@ -34,3 +34,13 @@ jQuery(window).load(function() {
 		}, false );
 	}
 })();
+
+jQuery(function () {
+	jQuery(".view-user-picks-list .view-grouping .view-grouping-content").hide();
+
+	jQuery(".view-user-picks-list .view-grouping a").bind('click', function(e) {
+		var $el = jQuery(e.currentTarget);
+		$el.parent().next().slideToggle(100);
+		e.preventDefault();
+	});
+});

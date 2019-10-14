@@ -55,7 +55,7 @@ function _og_invite_people_new_users_form($form, &$form_state, $group_type, $gid
     $form['og_invite_people']['invitee'] = array(
       '#type' => 'textfield',
       '#title' => t('Email'),
-      '#description' => t('New user will be created and invited as member of this group. A one time login link will be sent to the invitee\'s email.  '),
+      '#description' => t('New user will be created and invited as member of this group. A one time login link will be sent to the invitee\'s email.'),
       '#required' => TRUE,
     );
   }
@@ -63,20 +63,28 @@ function _og_invite_people_new_users_form($form, &$form_state, $group_type, $gid
     $form['og_invite_people']['invitee'] = array(
       '#type' => 'textarea',
       '#title' => t('User email(s)'),
-      '#description' => t('Use commas or new lines to split email addresses. The new users will be created and invited as members of this group. A one time login link will be sent to the invitees\' email.  '),
+      '#description' => t('Use commas or new lines to split email addresses. The new users will be created and invited as members of this group. A one time login link will be sent to the invitees\' email.'),
       '#required' => TRUE,
     );
   }
-  $role_selection_widget = variable_get('og_invite_people_roles_as_checkboxes', 0) ? 'checkboxes' : 'select';
-  $form['og_invite_people']['roles'] = array(
-    '#type' => $role_selection_widget,
-    '#multiple' => TRUE,
-    '#title' => t('Assign roles'),
-    '#description' => t('Choose one or more roles you would like to assign to the users. ("member" role is assigned by default)'),
-    '#options' => $og_roles,
-    '#size' => 5,
-    '#weight' => 1001,
-  );
+  if ($og_roles) {
+    $role_selection_widget = variable_get('og_invite_people_roles_as_checkboxes', 0) ? 'checkboxes' : 'select';
+    $form['og_invite_people']['roles'] = array(
+      '#type' => $role_selection_widget,
+      '#multiple' => TRUE,
+      '#title' => t('Assign roles'),
+      '#description' => t('Choose one or more roles you would like to assign to the users. ("member" role is assigned by default)'),
+      '#options' => $og_roles,
+      '#size' => 5,
+      '#weight' => 1001,
+    );
+  }
+  else {
+    $form['og_invite_people']['roles'] = array(
+      '#type' => 'value',
+      '#value' => array(),
+    );
+  }
   if (variable_get('og_invite_people_add_membership_state', 0)) {
     $form['og_invite_people']['state'] = array(
       '#type' => 'select',
@@ -173,7 +181,13 @@ function _og_invite_people_new_users_form_submit($form, &$form_state) {
     // Try to load the user by email and see if exists.
     if ($account = user_load_by_mail($invitee_email)) {
       $had_account = TRUE;
-      // $message = '%user is already known and has been added to the group.';
+    }
+    elseif (
+      module_exists('multiple_email')
+      && ($multiple_mail_address = multiple_email_find_address($invitee_email))
+      && ($account = user_load($multiple_mail_address->uid))
+    ) {
+      $had_account = TRUE;
     }
     else {
       // Create a user and return $account object.

@@ -198,7 +198,7 @@ function _og_invite_people_email_text($key, $language = NULL, $variables = array
       case 'existing_user_new_group_body':
         $text = t(variable_get('og_invite_people_email_existing_body', "[user:name],
 
-You have been added as a member to [@node:title]. You can log in and view your memberships at [site:login-url].
+You have been added as a member to [node:title]. You can log in and view your memberships at [site:login-url].
 
 --  [site:name] team"), array(), $t_options);
         break;

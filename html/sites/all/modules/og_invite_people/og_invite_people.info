@@ -6,9 +6,8 @@ project = "og_invite_people"
 dependencies[] = og
 configure = admin/config/group/og-invite-people
 
-; Information added by Drupal.org packaging script on 2015-09-29
-version = "7.x-2.0-alpha1"
+; Information added by Drupal.org packaging script on 2018-05-18
+version = "7.x-2.0-alpha2"
 core = "7.x"
 project = "og_invite_people"
-datestamp = "1443539344"
-
+datestamp = "1526681289"

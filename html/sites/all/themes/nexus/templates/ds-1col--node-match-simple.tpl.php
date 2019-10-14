@@ -28,30 +28,50 @@ if ($pool_id !== NULL && $node_type === 'pool' || is_user_editor($user)) {
     unset($content['group_matches']);
   }
 
-  $fields = [];
-  foreach (GRUNFES_TEAM_KEYS as $team_key) {
-    $key = "field_team_${team_key}";
-    $team_var = ${$key};
+  // $field_editor_notes = $content['field_editor_notes'];
+  // if (isset($content['field_editor_notes'])) {
+  //     unset($content['field_editor_notes']);
+  // }
 
-    if (isset($team_var) && !empty($team_var)) {
-      $team_members = array_map(function ($obj) {
-        return '<span>' . $obj['entity']->title . '</span>';
-      }, $team_var);
+  $match_type_id = isset($field_type['und'][0]['tid'])
+    ? $field_type['und'][0]['tid'] : NULL;
 
-      $text = join('', $team_members);
+  $term = taxonomy_term_load($match_type_id);
 
-      $value = base64_encode(serialize(array_column($team_var, 'target_id')));
-
-      $fields[$key] = (object) array(
-        'raw' => $nid,
-        'value' => $value,   // Ovde bi trebalo da mi vrati ime Wrestlera
-        'text' => $text,
-      );
-    }
-  }
   print render($content);
 
-  print grunfes_render_matches($pool_id, $fields);
+  if ($term) {
+      if ($term->name === 'Standard') {
+        $fields = [];
+        foreach (GRUNFES_TEAM_KEYS as $team_key) {
+          $key = "field_team_${team_key}";
+          $team_var = ${$key};
+
+          if (isset($team_var) && !empty($team_var)) {
+            $team_members = array_map(function ($obj) {
+              return '<span>' . $obj['entity']->title . '</span>';
+            }, $team_var);
+
+            $text = join('', $team_members);
+
+            $value = base64_encode(serialize(array_column($team_var, 'target_id')));
+
+            $fields[$key] = (object) array(
+              'raw' => $nid,
+              'value' => $value,   // Ovde bi trebalo da mi vrati ime Wrestlera
+              'text' => $text,
+            );
+          }
+        }
+
+        print grunfes_render_matches($pool_id, $fields);
+      }
+      else if ($term->name === 'Rumble') {
+        print grunfes_render_rumble_match($user->uid, $pool_id, $nid);
+      }
+  }
+
+  // print render($field_editor_notes); 
 }
 else {
   print render($content);

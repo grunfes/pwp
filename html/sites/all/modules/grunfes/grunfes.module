@@ -140,7 +140,7 @@ function grunfes_reset_pool_submit(&$form, $form_state) {
   }
 
   $pool = node_load($gid);
-  
+
 
   drupal_set_message('Pool has been reset succesfully.');
   drupal_goto(
@@ -204,6 +204,7 @@ function grunfes_mitb_cash_in($gid) {
 }
 
 function grunfes_mitb_cash_in_access($gid) {
+  return TRUE;
   global $user;
 
   if (!is_numeric($gid) || !grunfes_mitb_user_can_pick($gid, $user->uid)) {
@@ -584,8 +585,24 @@ function grunfes_publish_show($show_id) {
           continue;
         }
 
-        $user_picks = grunfes_get_user_picks_by_pool($pool_user->uid, $pool->nid);
-        $user_points = grunfes_calculate_show_points($show, $user_picks);
+      $user_picks = grunfes_get_user_picks_by_pool($pool_user->uid, $pool->nid);
+      $user_points = grunfes_calculate_show_points($show, $user_picks);
+      $admin_mitb_pick = grunfes_mitb_get_user_pick($show_id, 1);
+
+      if (grunfes_check_mitb($show_id, $out) && $admin_mitb_pick !== NULL) {
+          $user_mitb_pick = grunfes_mitb_get_user_pick($show_id, $pool_user->uid);
+
+        if ($user_mitb_pick !== NULL) {
+          $mitb_picks_equal = grunfes_mitb_compare_picks($admin_mitb_pick, $user_mitb_pick);
+
+          if ($mitb_picks_equal) {
+              $user_points += 20;
+          }
+          else {
+              $user_points -= 10;
+          }
+        }
+      }
 
         $query = new EntityFieldQuery();
         $query
@@ -636,6 +653,7 @@ function grunfes_calculate_show_points($show, $user_pick_ids) {
 
   $show_match_ids = array_column($show->field_matches['und'], 'target_id');
   $show_matches = entity_load('node', $show_match_ids);
+  $show_match_ids = array_keys($show_matches);
 
   $user_picks = entity_load('node', $user_pick_ids);
   $user_win_count = 0;
@@ -726,15 +744,19 @@ function grunfes_fetch_pick($user_id, $pool_id, $match_id) {
 function grunfes_render_matches($pool_id, $fields) {
   global $user;
 
+  //  if (is_null($pool_id) || empty($fields)) {
+  //    return '';
+  //  }
+
   $date_expired = TRUE;
   $team_keys = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'];
   $html = '';
   $match_id = $fields['field_team_a']->raw;
   $results = grunfes_fetch_pick($user->uid, $pool_id, $match_id);
 
-//  $show = node_load($show_id);
-//  $show_is_published = '';
-//  $show_is_published = $show->field_is_published['und'][0]['value'] === 'Yes';
+  //  $show = node_load($show_id);
+  //  $show_is_published = '';
+  //  $show_is_published = $show->field_is_published['und'][0]['value'] === 'Yes';
 
   if ($pool_id !== NULL) {
     $pool = node_load($pool_id);
@@ -764,7 +786,7 @@ function grunfes_render_matches($pool_id, $fields) {
     $_SESSION['show_expired'] = TRUE;
   }
 
-//  $is_disabled = $date_expired || $pool_id === FALSE || !og_is_member('node', $pool_id) || $show_published;
+  //  $is_disabled = $date_expired || $pool_id === FALSE || !og_is_member('node', $pool_id) || $show_published;
   $is_disabled = $date_expired || $pool_id === FALSE || !og_is_member('node', $pool_id);
 
   foreach ($team_keys as $index => $value) {
@@ -790,8 +812,9 @@ function grunfes_render_matches($pool_id, $fields) {
     }
   }
 
-  if (!is_user_administrator() && !$date_expired) {
-    $is_no_contested = $results === GRUNFES_NO_CONTEST_PICK_VALUE;
+  //  if (!is_user_administrator() && !$date_expired) {
+  if (is_user_administrator() || !$date_expired) {
+    $is_no_contested = base64_decode($results) === GRUNFES_NO_CONTEST_PICK_VALUE;
     $html .= grunfes_render_match(
       $match_id,
       base64_encode(GRUNFES_NO_CONTEST_PICK_VALUE),
@@ -838,7 +861,7 @@ function grunfes_render_match($name, $value, $text, $is_checked, $is_disabled) {
 
   $class = sprintf(
     'left p5 field-type-entityreference %s',
-    $value === GRUNFES_NO_CONTEST_PICK_VALUE
+    base64_decode($value) === GRUNFES_NO_CONTEST_PICK_VALUE
       ? 'no_contest'
       : ''
   );
@@ -852,6 +875,48 @@ function grunfes_render_match($name, $value, $text, $is_checked, $is_disabled) {
     $text,
     trim($class),
   ], $tpl);
+}
+
+function grunfes_render_rumble_match($user_id, $pool_id, $match_id) {
+  $query = $query = new \EntityFieldQuery();
+  $query
+    ->entityCondition('entity_type', 'wrestler')
+    ->entityCondition('bundle', 'wrestler');
+  $result = $query->execute();
+
+  $user_pick = grunfes_fetch_pick($user_id, $pool_id, $match_id);
+
+  if (!empty($result['wrestler'])) {
+    $wrestler_ids = array_keys($result['wrestler']);
+
+    if (is_array($wrestler_ids)) {
+      $wrestlers = entity_load('wrestler', $wrestler_ids);
+
+      usort($wrestlers, function ($a, $b) {
+        return strnatcmp($a->title, $b->title);
+      });
+
+      $options = '';
+      $has_selected = false;
+      foreach ($wrestlers as $wrestler) {
+        $value = base64_encode(serialize([$wrestler->id]));
+        $has_selected = $value === $user_pick;
+        $selected = $has_selected ? 'selected' : '';
+
+        $options .= "<option {$selected} value=\"{$value}\">{$wrestler->title}</option>";
+      }
+
+      $selected = !$has_selected ? 'selected ' : '';
+      $no_contest_options =
+        '<option ' . $selected . 'value="' . base64_encode(GRUNFES_NO_CONTEST_PICK_VALUE) . '">' .
+        GRUNFES_NO_CONTEST_PICK_TEXT .
+        '</option>';
+
+      return '<select name="match_' . $match_id . '">' . $no_contest_options . $options . '</select>';
+    }
+  }
+
+  return '';
 }
 
 function grunfes_default_rules_configuration_alter(&$data) {
@@ -920,7 +985,7 @@ function grunfes_wrapper_debug($w) {
  * Implements hook_cron().
  */
 function grunfes_cron() {
-  
+
   $query = new \EntityFieldQuery();
   $query
     ->entityCondition('entity_type', 'node')
@@ -1402,11 +1467,11 @@ function grunfes_decode_user_pick($encoded) {
 
   $entities = entity_load('wrestler', unserialize($decoded));
 
-  $str = array_map( function ($entity) {
+  $str = array_map(function ($entity) {
     return $entity->title;
   }, $entities);
 
-  return join(', ',$str);
+  return join(', ', $str);
 }
 
 function grunfes_get_user_standing($data) {

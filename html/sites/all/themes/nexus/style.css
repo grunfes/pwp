@@ -79,6 +79,9 @@ img {
 /* Commons
 ================================================== */
 
+.block {float: left; width: 100%;}
+
+
 /*clear floats*/
 .remove-margin {
   margin-right: 0 !important;
@@ -811,7 +814,7 @@ ol.search-results { padding-left: 0; }
 
 .search-results li { border-bottom: 1px solid #d3d7d9; padding-bottom: 0.4285em; margin-bottom: 0.5em; }
 
-.search-results li:last-child { border-bottom: none; padding-bottom: none; margin-bottom: 1em; }
+.search-results li:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 1em; }
 
 .search-results .search-snippet-info { padding-left: 0; }
 
@@ -1291,8 +1294,12 @@ font-weight: bold;
 
 }
 
-.node-match .field-type-entityreference:last-child, .node-match .field-type-entityreference:nth-last-child(2), .view-matches .views-field:last-child, .view-shows .views-field:last-child, .view-shows .views-field:nth-last-child(2), .view-picks-template .match > div:last-child
- {background-image: none !important;}
+/* .node-match .field-type-entityreference:last-child, .node-match .field-type-entityreference:nth-last-child(2), .view-matches .views-field:last-child, .view-shows .views-field:last-child, .view-shows .views-field:nth-last-child(2), .view-picks-template .match > div:last-child
+ {background-image: none !important;} */
+
+.node-type-show .node-match .field-type-entityreference:last-child {background-image: none}
+
+
 
 .node-match .field-type-entityreference ul, .view-matches .views-field ul,  .view-shows .views-field ul, .view-picks-template form > div ul {
     padding: 0;
@@ -1361,7 +1368,7 @@ iframe {
   margin-right: 2px;
 }
 
-#block-block-8 {margin: 30px 0;text-align: center; border-top: 1px dotted #ddd;}
+#block-block-8 {margin: 30px 0;text-align: center; }
 #block-block-8 .w100 .w40 {width: 50%;}
 #block-block-8 .w100 a, input[type="submit"], input[type="submit"]:hover, div.button a, div.button a:hover, .item-list .pager li a, #edit-cancel  {
   background: #d4180a;
@@ -1392,16 +1399,29 @@ input[type="submit"],input[type="submit"]:hover,div.button a, div.button a:hover
 #first-time, .front h1.page-title {display: none;}
 
 aside#sidebar .block {
-  border-top: 1px solid #fff;
-  border-bottom: 1px solid #ccc;
-  float: left;
-  padding-bottom: 20px;
-  width: 100%;
-  padding-top: 20px;
-  margin: 0;
+    float: left;
+    width: 100%;
+    border-radius: 5px;
+    overflow: hidden;
 }
 
 aside#sidebar .block:first-child {border-top: none;}
+
+aside .block .content, #primary .block {
+  border: 1px solid #e1e1e1;
+  padding: 25px;
+  margin: 0px 0;
+  border-radius: 5px;
+} 
+
+aside .block .content {border-radius: 0 0 5px 5px;}
+
+aside .block .title {
+  margin-top: 0;
+} 
+
+#primary .block {margin-bottom: 30px;}
+.front #block-system-main {display:none;}
 
 #block-user-login {
   max-width: 100%;
@@ -1668,13 +1688,23 @@ td.small h3 {
 
 /**** menu styles ***/
 
-@media all and (min-width: 768px) and (max-width: 1080px) {
+@media all and (min-width: 768px) {
   .site-branding {
-    width: 30%;
+    width: 28%;
   }
-  .mainmenu { width: 70%;}
+  .mainmenu { width: 72%;}
 }
 
+@media all and (min-width: 600px) and (max-width: 980px) {
+    
+    #main-menu > ul > li > a {
+        padding: 6px;
+        font-size: 14px;
+        font-weight: normal;
+    }
+    
+    #logo img {max-width: 180px;}
+}
 
 
 /**** MOBILES ***/
@@ -1687,6 +1717,8 @@ td.small h3 {
   h1#site-title{
     text-align: center;
   }
+  
+  header {height: 150px;}
 
   #site-logo {
     padding-top: 0;
@@ -1695,6 +1727,24 @@ td.small h3 {
   select.mnav{
     width: 100%;
     margin-bottom: 20px;
+    background: #000;
+    color: #fff;
+    border: 0;
+    padding: 6px;
+  }
+  
+  .mobilenavi {
+    position: fixed;
+    z-index: 100;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    top: 0;
+    left: 0;
+   }
+   
+  .logged-in .mobilenavi {
+      top: 35px;
   }
 
   #main-menu{
@@ -1715,6 +1765,7 @@ td.small h3 {
   div#logo {
     width: 100%;
     text-align: center;
+    top: 40px;
   }
 
   #site-logo {
@@ -1848,7 +1899,7 @@ div#mitb {
 #block-views-faq-block h2 { font-size: 36px;}
 
 * .ui-accordion-header{
-  background: #f8f8f8;
+  background: #e8e8e8;
   border: 0;
   font-family: 'Dosis', sans-serif;
 }
@@ -1978,10 +2029,10 @@ div#block-views-a-picking-template-block .node-match .field-type-entityreference
   border-radius: 10px;
   margin: 20px 0;
 }
-#sidebar .block > h2, #block-views-editor-s-picks-block > h2 {
+#sidebar .block > h2, #block-views-editor-s-picks-block > h2, .view-shows-in-pool fieldset legend {
   font-size: 20px;
   color: #fff;
-  margin-bottom: 0;
+  margin: 0;
   text-transform: uppercase;
   font-weight: bold;
   padding: 15px;
@@ -1992,6 +2043,18 @@ div#block-views-a-picking-template-block .node-match .field-type-entityreference
   background-size: auto;
   background-repeat: no-repeat;
 }
+
+.view-shows-in-pool fieldset legend {
+    height: auto;
+    text-shadow: none;
+    font-size: 12px;
+    padding: 5px 1px;
+    box-sizing: content-box;
+    margin: 0;
+    border: 0;
+}
+
+.view-shows-in-pool fieldset legend a {color: #fff;}
 
 #sidebar .block .content {
   padding: 25px;
@@ -2013,3 +2076,38 @@ div#block-views-a-picking-template-block .node-match .field-type-entityreference
 #block-views-editor-s-picks-block .views-field.views-field-created {
   background: #7f8399;
 } 
+
+.views-label {
+  margin-right: 5px;
+  color: #e00100;
+}
+
+#mitb .views-row.left.w100 {
+  border-radius: 5px;
+  background: #fff;
+}
+
+
+.not-logged-in .node-match select {display: none;}
+
+.not-logged-in .view-shows-in-pool input[type="submit"] {display:none;}
+
+.not-logged-in .view-shows-in-pool .node-match .field-type-entityreference:last-child {display: none;}
+.not-logged-in .view-shows-in-pool .node-match .field-type-entityreference:nth-last-child(2) {background-image: none;}
+
+.not-logged-in .node-match fieldset .field-type-entityreference:last-child {background-image: none;}
+
+.field-name-body strong { color: #0c59b1; }
+
+.flag-outer.flag-outer-on-top-of-a-list {
+    float: right;
+    padding: 5px;
+    border-radius: 5px;
+    background: #d4180a;
+}
+
+.flag-outer.flag-outer-on-top-of-a-list a {color: #fff;}
+
+#block-block-14 {
+    float:left;
+}
