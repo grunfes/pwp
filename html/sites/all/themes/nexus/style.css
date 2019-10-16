@@ -1898,13 +1898,13 @@ div#mitb {
 
 #block-views-faq-block h2 { font-size: 36px;}
 
-* .ui-accordion-header{
+* .ui-accordion-header, .view-grouping-header {
   background: #e8e8e8;
   border: 0;
   font-family: 'Dosis', sans-serif;
 }
 
-* .ui-accordion-content a {
+* .ui-accordion-content a, .view-grouping-header a {
   color: #333 !important;
 }
 
@@ -1913,6 +1913,32 @@ div#mitb {
  font-family: 'Din', sans-serif;
  font-size:13px;
 }
+
+.view-grouping-header {
+  cursor: pointer;
+  position: relative;
+  margin-top: 1px;
+  zoom: 1;
+}
+
+.view-grouping-header a {
+  display: block;
+  font-size: 1.2em;
+  padding: .5em .5em .5em .5em;
+  color: #0c59b1 !important;
+}
+
+.view-user-picks-list .view-grouping-content .ui-accordion-header .ui-icon {
+  left: 1.5em;
+}
+
+.view-user-picks-list .view-grouping-content a {
+  padding-left: 3.2em;
+}
+
+span.ui-icon.ui-icon-triangle-1-e.left {
+  margin: 4px 10px 0 -3px;
+} 
 
 #block-views-faq-block .view-header {
   top: 25px;
