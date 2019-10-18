@@ -1898,13 +1898,13 @@ div#mitb {
 
 #block-views-faq-block h2 { font-size: 36px;}
 
-* .ui-accordion-header, .view-grouping-header {
+* .ui-accordion-header, .view-pick-list-user .view-grouping-header {
   background: #e8e8e8;
   border: 0;
   font-family: 'Dosis', sans-serif;
 }
 
-* .ui-accordion-content a, .view-grouping-header a {
+* .ui-accordion-content a, .view-pick-list-user .view-grouping-header a {
   color: #333 !important;
 }
 
@@ -1914,26 +1914,31 @@ div#mitb {
  font-size:13px;
 }
 
-.view-grouping-header {
+.view-pick-list-user .view-grouping-header {
   cursor: pointer;
   position: relative;
   margin-top: 1px;
   zoom: 1;
 }
 
-.view-grouping-header a {
+.view-pick-list-user .view-grouping-header a {
   display: block;
-  font-size: 1.2em;
-  padding: .5em .5em .5em .5em;
+  font-size: 16px !important;
+  padding: .5em .5em .5em 2.5em;
   color: #0c59b1 !important;
 }
 
-.view-user-picks-list .view-grouping-content .ui-accordion-header .ui-icon {
+.view-pick-list-user .view-grouping-content .ui-accordion-header .ui-icon {
   left: 1.5em;
 }
 
-.view-user-picks-list .view-grouping-content a {
+.view-pick-list-user .view-grouping-content a {
   padding-left: 3.2em;
+}
+
+.user-pick-list-show, .view-pick-list-user {margin-bottom: 3px;}
+.user-pick-list-show > .view-grouping-content {
+  padding: 5px;
 }
 
 span.ui-icon.ui-icon-triangle-1-e.left {

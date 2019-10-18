@@ -1664,6 +1664,7 @@ function grunfes_block_view($delta = '')
                 <div class=\"views-label views-label-field-team-picked red left p5\">Team picked:</div>
                 <div class=\"field-content p5 left\">{{team_picked}}</div>
             </div>
+            <hr>
           </div>
         ";
 
