@@ -1,12 +1,12 @@
 jQuery(window).load(function() {
-
+    
   /* Navigation */
 
-	jQuery('#main-menu > ul').superfish({
-		delay:       500,								// 0.1 second delay on mouseout
-		animation:   { opacity:'show',height:'show'},	// fade-in and slide-down animation
-		dropShadows: true								// disable drop shadows
-	});
+	jQuery('#main-menu > ul').superfish({ 
+		delay:       500,								// 0.1 second delay on mouseout 
+		animation:   { opacity:'show',height:'show'},	// fade-in and slide-down animation 
+		dropShadows: true								// disable drop shadows 
+	});	  
 
 	jQuery('#main-menu > ul').mobileMenu({
 		prependTo:'.mobilenavi'
@@ -34,13 +34,3 @@ jQuery(window).load(function() {
 		}, false );
 	}
 })();
-
-// jQuery(function () {
-// 	jQuery(".view-user-picks-list .view-grouping .view-grouping-content").hide();
-//
-// 	jQuery(".view-user-picks-list .view-grouping a").bind('click', function(e) {
-// 		var $el = jQuery(e.currentTarget);
-// 		$el.parent().next().slideToggle(100);
-// 		e.preventDefault();
-// 	});
-// });
