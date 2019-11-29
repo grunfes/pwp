@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function pwp_daily_menu() {
+  return array(
+    'pwp_daily/data/fetch' => array(
+      'title' => 'PWP Daily Data Fetch',
+      'page callback' => 'pwp_daily_data_fetch',
+      'access callback' => TRUE,
+      'file' => 'includes/data-fetch.menu.inc',
+      'type' => MENU_CALLBACK,
+    ),
+  );
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function pwp_daily_block_info() {
+  return array(
+    'daily_game' => array(
+      'info' => t('Daily Game'),
+      'cache' => DRUPAL_NO_CACHE,
+    ),
+  );
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function pwp_daily_block_view($delta = '') {
+  switch ($delta) {
+    case 'daily_game':
+      $block['content'] = 'Daily Game';
+
+      return $block;
+  }
+}
