@@ -4,27 +4,40 @@
  * Implements hook_menu().
  */
 function pwp_daily_menu() {
-  return array(
-    'pwp_daily/data/fetch' => array(
+  return [
+    'pwp_daily/data/fetch' => [
       'title' => 'PWP Daily Data Fetch',
       'page callback' => 'pwp_daily_data_fetch',
       'access callback' => TRUE,
       'file' => 'includes/data-fetch.menu.inc',
       'type' => MENU_CALLBACK,
-    ),
-  );
+    ],
+  ];
+}
+
+/**
+ * Implements hook_theme().
+ */
+function pwp_daily_theme($existing, $type, $theme, $path) {
+  return [
+    'pwp_daily_game' => [
+      'render element' => 'content',
+      'template' => 'pwp_daily_game',
+      'path' => pwp_daily_helpers::getPath('templates'),
+    ],
+  ];
 }
 
 /**
  * Implements hook_block_info().
  */
 function pwp_daily_block_info() {
-  return array(
-    'daily_game' => array(
+  return [
+    'daily_game' => [
       'info' => t('Daily Game'),
       'cache' => DRUPAL_NO_CACHE,
-    ),
-  );
+    ],
+  ];
 }
 
 /**
@@ -33,7 +46,21 @@ function pwp_daily_block_info() {
 function pwp_daily_block_view($delta = '') {
   switch ($delta) {
     case 'daily_game':
-      $block['content'] = 'Daily Game';
+      $block['content'] = [
+        '#theme' => 'pwp_daily_game',
+        '#attached' => [
+          'js' => array_merge(
+            pwp_daily_helpers::getSharedJSLibraries(),
+            [
+              [
+                'type' => 'file',
+                'data' => pwp_daily_helpers::getPath('js/pwp_daily_game/main.js'),
+                'scope' => 'footer',
+              ],
+            ]
+          ),
+        ],
+      ];
 
       return $block;
   }
