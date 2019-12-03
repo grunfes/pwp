@@ -4,16 +4,28 @@
       Loading...
     </template>
     <template v-else-if="error">
-
+      Error
+    </template>
+    <template v-else-if="!hasDailyGame">
+      <div>No Daily Game</div>
     </template>
     <template v-else>
       <component
         :is="component"
         :show="show"
         :matches="show.matches"
+        :picks="picks"
         @game-start="handleGameStart"
+        @game-end="handleGameEnd"
       />
     </template>
+  </div>
+</script>
+
+<script id="game-summary-template" type="x-template">
+  <div>
+    <h2>Game Summary</h2>
+    <p>{{ picks }}</p>
   </div>
 </script>
 
@@ -29,16 +41,37 @@
   </div>
 </script>
 
-<script id="game-template" type="x-template">
+<script id="countdown-template" type="x-template">
   <div>
-    <match
-      v-for="match in matches"
-      :key="match.id"
-      :id="match.id"
-      :title="match.title"
-      :teams="match.teams"
-    />
+    <interval v-if="!intervalEnded" :duration="duration" @complete="handleComplete">
+      <template #default="{ elapsed }">
+        Rumble in
+        {{ elapsed }}
+      </template>
+    </interval>
+
+    <slot v-else />
   </div>
+</script>
+
+<script id="game-template" type="x-template">
+  <countdown :key="index" :duration="3">
+    <div>
+      <interval :duration="5" @complete="handleChange">
+        <template #default="{ elapsed }">
+          {{ elapsed }}
+        </template>
+      </interval>
+
+      <match
+        :key="match.id"
+        :id="match.id"
+        :title="match.title"
+        :teams="match.teams"
+        @pick="handleTeamPick"
+      />
+    </div>
+  </countdown>
 </script>
 
 <script id="match-template" type="x-template">
@@ -53,6 +86,7 @@
       :checked="getKey(key) === selected"
       :team="key"
       :wrestlers="team"
+      @input="(team) => $emit('pick', { match: id, team: team })"
     >
       <template
         v-if="shouldAppend(index)"

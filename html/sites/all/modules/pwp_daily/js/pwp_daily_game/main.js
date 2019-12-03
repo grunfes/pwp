@@ -12,14 +12,22 @@
               show: undefined,
               loading: true,
               error: undefined,
+              picks: {},
               component: 'game-intro'
             };
           },
+          computed: {
+            hasDailyGame: function () {
+              return !_.isEmpty(this.show);
+            }
+          },
           mounted: function () {
             axios.get('/pwp_daily/data/fetch/')
-            .then(function (data) {
-              if (data.status === 200 && data.data.status === 200) {
-                this.show = data.data.data;
+            .then(function (response) {
+              var responseData = response.data;
+
+              if (response.status === 200 && responseData.status === 200) {
+                this.show = responseData.data;
                 this.loading = false;
               }
             }.bind(this));
@@ -27,6 +35,76 @@
           methods: {
             handleGameStart: function () {
               this.component = 'game';
+            },
+            handleGameEnd: function (picks) {
+              this.picks = picks;
+              this.component = 'game-summary';
+            }
+          }
+        }
+      },
+
+      {
+        name: 'Interval',
+        component: {
+          inheritAttrs: false,
+          props: {
+            duration: {
+              type: Number,
+              required: true
+            },
+            interval: {
+              type: Number,
+              default: 1000
+            }
+          },
+          data: function () {
+            return {
+              elapsed: this.duration * 1000
+            };
+          },
+          mounted: function () {
+            this.$__interval = setInterval(this.update,  this.interval);
+          },
+          beforeDestroy: function () {
+            clearInterval(this.$__interval);
+          },
+          methods: {
+            update: function () {
+              this.elapsed -= this.interval;
+              if (this.elapsed <= 0) {
+                clearInterval(this.$__interval);
+                this.$emit('complete');
+              }
+            }
+          },
+          render: function () {
+            return this.$scopedSlots.default({
+              elapsed: this.elapsed
+            });
+          }
+        }
+      },
+
+      {
+        name: 'Countdown',
+        component: {
+          template: '#countdown-template',
+          inheritAttrs: false,
+          props: {
+            duration: {
+              type: Number,
+              required: true
+            }
+          },
+          data: function () {
+            return {
+              intervalEnded: false
+            };
+          },
+          methods: {
+            handleComplete: function () {
+              this.intervalEnded = true;
             }
           }
         }
@@ -55,6 +133,31 @@
             matches: {
               type: Array,
               required: true
+            }
+          },
+          data: function () {
+            return {
+              index: 0,
+              picks: {}
+            };
+          },
+          computed: {
+            match: function () {
+              return this.matches[this.index];
+            }
+          },
+          methods: {
+            handleChange: function () {
+              if (this.index < this.matches.length - 1) {
+                this.index += 1;
+                return;
+              }
+
+              this.$emit('game-end', this.picks);
+            },
+
+            handleTeamPick: function (pick) {
+              this.picks[pick.match] = pick.team;
             }
           }
         }
@@ -128,6 +231,20 @@
             handleInput: function (e) {
               var key = this.id + '_' + this.team;
               this.$emit('input', e.target.checked ? key : undefined);
+            }
+          }
+        }
+      },
+
+      {
+        name: 'GameSummary',
+        component: {
+          template: '#game-summary-template',
+          inheritAttrs: false,
+          props: {
+            picks: {
+              type: Object,
+              default: function () { return {}; }
             }
           }
         }
