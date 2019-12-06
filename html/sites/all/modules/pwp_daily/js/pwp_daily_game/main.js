@@ -180,7 +180,7 @@
             },
 
             teams: {
-              type: Object,
+              type: Array,
               required: true
             }
           },
@@ -190,12 +190,11 @@
             };
           },
           methods: {
-            getKey: function (key) {
-              return this.id + '_' +  key;
-            },
-
             shouldAppend: function (index) {
               return index !== Object.keys(this.teams).length - 1;
+            },
+            handleTeamInput: function (team) {
+              this.$emit('pick', { match: this.id, team: team });
             }
           }
         }
@@ -217,20 +216,14 @@
               default: false
             },
 
-            team: {
-              type: String,
-              required: true
-            },
-
             wrestlers: {
               type: Array,
-              default: function () { return []; }
+              required: true
             }
           },
           methods: {
             handleInput: function (e) {
-              var key = this.id + '_' + this.team;
-              this.$emit('input', e.target.checked ? key : undefined);
+              this.$emit('input', e.target.checked ? this.id : undefined);
             }
           }
         }

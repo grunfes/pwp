@@ -77,24 +77,22 @@
 <script id="match-template" type="x-template">
   <div>
     <h2>{{ title }}</h2>
-
-    <team
-      v-for="(team, key, index) in teams"
-      v-model="selected"
-      :key="getKey(key)"
-      :id="id"
-      :checked="getKey(key) === selected"
-      :team="key"
-      :wrestlers="team"
-      @input="(team) => $emit('pick', { match: id, team: team })"
-    >
-      <template
-        v-if="shouldAppend(index)"
-        #append
-      >
-        VS
-      </template>
-    </team>
+        <team
+          v-for="team in teams"
+          v-model="selected"
+          :key="team.id"
+          :id="team.id"
+          :checked="team.id === selected"
+          :wrestlers="team.wrestlers"
+          @input="handleTeamInput"
+        >
+          <template>
+            v-if="shouldAppend(index)"
+            #append
+          >
+            VS
+          </template>
+        </team>
   </div>
 </script>
 

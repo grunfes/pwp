@@ -36,8 +36,8 @@ class pwp_daily_data_fetcher {
     $showData = new stdClass();
 
     if (isset($result['daily_show'])) {
-      $entities = entity_load('daily_show', array_keys($result['daily_show']));
-      $showEntity = array_shift($entities);
+      $showEntities = entity_load('daily_show', array_keys($result['daily_show']));
+      $showEntity = array_shift($showEntities);
       $showEntityWrapper = entity_metadata_wrapper('daily_show', $showEntity);
       $showData->id = $showEntity->id;
       $showData->title = $showEntity->title;
@@ -48,33 +48,36 @@ class pwp_daily_data_fetcher {
 
       /** @var \Entity $match */
       foreach ($showEntityWrapper->field_daily_matches->value() as $match) {
-        $matchData = new stdClass();
+        if (!isset($match->field_daily_teams['und']) || !is_array($match->field_daily_teams['und']) || count($match->field_daily_teams['und']) === 0) {
+          throw new \Exception('No teams assigned to ' . $match->id);
+        }
 
+        $matchData = new stdClass();
         $showData->matches[] = $matchData;
         $matchData->id = $match->id;
         $matchData->title = $match->title;
         $matchData->teams = [];
 
-        foreach (pwp_daily_constants::TEAM_KEYS as $teamKey) {
-          $teamFieldName = pwp_daily_helpers::getTeamFieldName($teamKey);
-          $wrestlers = $match->wrapper()->{$teamFieldName}->value();
-
-          if (empty($wrestlers)) {
-            continue;
+        $dailyTeamIds = array_column($match->field_daily_teams['und'], 'target_id');
+        foreach (entity_load('daily_team', $dailyTeamIds) as $dailyTeam) {
+          if (!isset($dailyTeam->field_daily_wrestlers['und']) || !is_array($dailyTeam->field_daily_wrestlers['und']) || count($dailyTeam->field_daily_wrestlers['und']) === 0) {
+            throw new \Exception('No wrestlers assigned to team: ' . $dailyTeam->id);
           }
 
-          try {
-            $matchData->teams[$teamKey] = [];
+          $dailyTeamData = new stdClass();
+          $dailyTeamData->id = $dailyTeam->id;
+          $dailyTeamData->title = $dailyTeam->title;
+          $dailyTeamData->wrestlers = [];
 
-            foreach ($wrestlers as $wrestler) {
-              $wrestlerData = new stdClass();
-              $wrestlerData->id = $wrestler->id;
-              $wrestlerData->title = $wrestler->title;
-              $matchData->teams[$teamKey][] = $wrestlerData;
-            }
-          } catch (\Exception $exception) {
-            watchdog('pwp_daily', $exception->getMessage());
+          $dailyTeamWrestlerIds = array_column($dailyTeam->field_daily_wrestlers['und'], 'target_id');
+          foreach (entity_load('daily_wrestler', $dailyTeamWrestlerIds) as $dailyWrestler) {
+            $dailyWrestlerData = new stdClass();
+            $dailyWrestlerData->id = $dailyWrestler->id;
+            $dailyWrestlerData->title = $dailyWrestler->title;
+            $dailyTeamData->wrestlers[] = $dailyWrestlerData;
           }
+
+          $matchData->teams[] = $dailyTeamData;
         }
       }
     }
