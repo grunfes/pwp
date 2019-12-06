@@ -4,20 +4,26 @@
       Loading...
     </template>
     <template v-else-if="error">
-      Error
+      <div class="messages error" style="display: block !important;">
+        {{ error.message }}
+      </div>
     </template>
     <template v-else-if="!hasDailyGame">
       <div>No Daily Game</div>
     </template>
     <template v-else>
-      <component
-        :is="component"
-        :show="show"
-        :matches="show.matches"
-        :picks="picks"
-        @game-start="handleGameStart"
-        @game-end="handleGameEnd"
-      />
+      <div>
+        <component
+          :is="component"
+          :show="show"
+          :matches="show.matches"
+          :picks="picks"
+          @game-start="handleGameStart"
+          @game-end="handleGameEnd"
+        />
+
+        <button @click.prevent="handleGameEnd">Send</button>
+      </div>
     </template>
   </div>
 </script>
@@ -55,9 +61,9 @@
 </script>
 
 <script id="game-template" type="x-template">
-  <countdown :key="index" :duration="3">
+  <countdown :key="index" :duration="0">
     <div>
-      <interval :duration="5" @complete="handleChange">
+      <interval :duration="1" @complete="handleChange">
         <template #default="{ elapsed }">
           {{ elapsed }}
         </template>

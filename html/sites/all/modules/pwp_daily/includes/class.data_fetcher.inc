@@ -26,18 +26,10 @@ class pwp_daily_data_fetcher {
    * @throws \Exception
    */
   public function fetchDailyGameData() {
-    $now = new \DateTime();
-    $this->query
-      ->entityCondition('entity_type', 'daily_show')
-      ->fieldCondition('field_daily_game_date', 'value', $now->format('Y-m-d 00:00:00'));
-
-    $result = $this->query->execute();
-
+    $showEntity = $this->getDailyShowEntity();
     $showData = new stdClass();
 
-    if (isset($result['daily_show'])) {
-      $showEntities = entity_load('daily_show', array_keys($result['daily_show']));
-      $showEntity = array_shift($showEntities);
+    if ($showEntity) {
       $showEntityWrapper = entity_metadata_wrapper('daily_show', $showEntity);
       $showData->id = $showEntity->id;
       $showData->title = $showEntity->title;
@@ -83,6 +75,26 @@ class pwp_daily_data_fetcher {
     }
 
     return $showData;
+  }
+
+  /**
+   * @return mixed|null
+   * @throws \Exception
+   */
+  public function getDailyShowEntity() {
+    $now = new \DateTime();
+    $this->query
+      ->entityCondition('entity_type', 'daily_show')
+      ->fieldCondition('field_daily_game_date', 'value', $now->format('Y-m-d 00:00:00'));
+
+    $result = $this->query->execute();
+
+    if (isset($result['daily_show'])) {
+      $showEntities = entity_load('daily_show', array_keys($result['daily_show']));
+      return array_shift($showEntities);
+    }
+
+    return NULL;
   }
 
 }

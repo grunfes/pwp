@@ -1,4 +1,4 @@
-/* global jQuery, _, axios, Drupal, Vue, console */
+/* global jQuery, _, axios, Drupal, Vue */
 
 ;(function ($, _, axios, Drupal, Vue) {
   Drupal.behaviors.dailyGame = {
@@ -22,7 +22,7 @@
             }
           },
           mounted: function () {
-            axios.get('/pwp_daily/data/fetch/')
+            axios.get('/pwp_daily/data/fetch')
             .then(function (response) {
               var responseData = response.data;
 
@@ -30,6 +30,10 @@
                 this.show = responseData.data;
                 this.loading = false;
               }
+            }.bind(this))
+            .catch(function (error) {
+              this.error = error;
+              this.loading = false;
             }.bind(this));
           },
           methods: {
@@ -37,8 +41,31 @@
               this.component = 'game';
             },
             handleGameEnd: function (picks) {
-              this.picks = picks;
-              this.component = 'game-summary';
+              var picksData = _.chain(_.keys(picks))
+              .filter(function (matchId) {
+                return picks[matchId] !== undefined;
+              })
+              .map(function (matchId) {
+                return { match: matchId, team: picks[matchId] };
+              })
+              .value();
+
+              axios.post('/pwp_daily/data/save', {
+                show: this.show.id,
+                picks: picksData
+              }, {
+                headers: {
+                  'Content-Type': 'application/json'
+                }
+              })
+              .then(function (response) {
+                console.log(response);
+              }.bind(this))
+              .catch(function (error) {
+                this.error = error;
+              }.bind(this));
+
+              // this.component = 'game-summary';
             }
           }
         }
@@ -64,7 +91,7 @@
             };
           },
           mounted: function () {
-            this.$__interval = setInterval(this.update,  this.interval);
+            this.$__interval = setInterval(this.update, this.interval);
           },
           beforeDestroy: function () {
             clearInterval(this.$__interval);
@@ -205,7 +232,7 @@
         component: {
           template: '#team-template',
           inheritAttrs: false,
-          props:{
+          props: {
             id: {
               type: String,
               required: true

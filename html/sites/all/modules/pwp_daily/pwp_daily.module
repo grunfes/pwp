@@ -1,6 +1,21 @@
 <?php
 
 /**
+ * Implements hook_permission().
+ */
+function pwp_daily_permission() {
+  return [
+    'access pwp_daily game' => [
+      'title' => t('Access content for the Daily Game.'),
+    ],
+    'play pwp_daily game' => [
+      'title' => t('Save picks for Daily Game.'),
+    ],
+  ];
+}
+
+
+/**
  * Implements hook_menu().
  */
 function pwp_daily_menu() {
@@ -8,8 +23,15 @@ function pwp_daily_menu() {
     'pwp_daily/data/fetch' => [
       'title' => 'PWP Daily Data Fetch',
       'page callback' => 'pwp_daily_data_fetch',
-      'access callback' => TRUE,
+      'access arguments' => ['access pwp_daily game'],
       'file' => 'includes/data-fetch.menu.inc',
+      'type' => MENU_CALLBACK,
+    ],
+    'pwp_daily/data/save' => [
+      'title' => 'PWP Daily Data Save',
+      'page callback' => 'pwp_daily_data_save',
+      'access callback' => TRUE,
+      'file' => 'includes/data-save.menu.inc',
       'type' => MENU_CALLBACK,
     ],
   ];

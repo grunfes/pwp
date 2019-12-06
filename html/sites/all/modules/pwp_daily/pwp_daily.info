@@ -6,5 +6,6 @@ package = PWP
 files[] = pwp_daily.constants.inc
 files[] = pwp_daily.helpers.inc
 files[] = includes/class.data_fetcher.inc
+files[] = includes/class.data_saver.inc
 
 dependencies[] = grunfes:grunfes
