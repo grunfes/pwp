@@ -65,3 +65,22 @@ function pwp_daily_block_view($delta = '') {
       return $block;
   }
 }
+
+/**
+ * Implements hook_form_alter().
+ */
+function pwp_daily_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id === 'eck__entity__form_add_daily_match_daily_match') {
+    $fieldDailyTeams = $form['field_daily_teams']['und'];
+    $dailyTeamsFormState = pwp_daily_helpers::getInlineEntityFormState($fieldDailyTeams, $form_state);
+
+    if ($dailyTeamsFormState['form'] === 'add') {
+      $title = 'Team ' . strtoupper(pwp_daily_constants::TEAM_KEYS[count($dailyTeamsFormState['entities'])]);
+      $form['field_daily_teams']['und']['form']['title']['#default_value'] = $title;
+    }
+
+    foreach ($dailyTeamsFormState['entities'] as $key => $dailyTeam) {
+      $form['field_winner']['und']['#options'][$key] = $dailyTeam['entity']->wrapper()->get('title')->value();
+    }
+  }
+}
