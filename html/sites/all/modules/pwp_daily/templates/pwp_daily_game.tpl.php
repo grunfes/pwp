@@ -21,8 +21,6 @@
           @game-start="handleGameStart"
           @game-end="handleGameEnd"
         />
-
-        <button @click.prevent="handleGameEnd">Send</button>
       </div>
     </template>
   </div>
@@ -61,9 +59,9 @@
 </script>
 
 <script id="game-template" type="x-template">
-  <countdown :key="index" :duration="0">
+  <countdown :key="index" :duration="3">
     <div>
-      <interval :duration="1" @complete="handleChange">
+      <interval :duration="5" @complete="handleChange">
         <template #default="{ elapsed }">
           {{ elapsed }}
         </template>

@@ -62,7 +62,7 @@ class pwp_daily_helpers {
    * @return string
    */
   public static function dailyPickTitleGenerator($data) {
-    return implode('-', [$data['user'], $data['show'], $data['match'], $data['team']]);
+    return implode('-', array_filter([$data['user'], $data['show'], $data['match'], $data['team']]));
   }
 
 }

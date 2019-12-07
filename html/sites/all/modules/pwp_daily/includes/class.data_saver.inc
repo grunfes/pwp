@@ -45,18 +45,28 @@ class pwp_daily_data_saver {
         }
       }
 
-      foreach ($data['picks'] as $pick) {
-        $this->validatePick($pick, $validKeys);
-        $this->savePick(array_merge(
-          $pick,
-          [
-            'show' => $data['show'],
-            'user' => $user->uid,
-          ]
-        ));
-
-        return;
+      if (empty($data['picks'])) {
+        $this->savePick([
+          'show' => $data['show'],
+          'match' => NULL,
+          'team' => NULL,
+          'user' => $user->uid,
+        ]);
       }
+      else {
+        foreach ($data['picks'] as $pick) {
+          $this->validatePick($pick, $validKeys);
+          $this->savePick(array_merge(
+            $pick,
+            [
+              'show' => $data['show'],
+              'user' => $user->uid,
+            ]
+          ));
+        }
+      }
+
+      return;
     }
 
     throw new \Exception("No Daily Show Found({$data['show']}).");
@@ -71,7 +81,7 @@ class pwp_daily_data_saver {
   protected function savePick($pickData) {
     $dailyPick = entity_create('daily_pick', [
       'type' => 'daily_pick',
-      'title' => pwp_daily_helpers::dailyPickTitleGenerator($pickData),
+      'title' => 'Daily Pick',
     ]);
 
     if (!($dailyPick instanceof Entity)) {
@@ -81,8 +91,14 @@ class pwp_daily_data_saver {
     $dailyPickWrapper = entity_metadata_wrapper('daily_pick', $dailyPick);
     $dailyPickWrapper->field_daily_pick_user = $pickData['user'];
     $dailyPickWrapper->field_daily_pick_show = $pickData['show'];
-    $dailyPickWrapper->field_daily_pick_match = $pickData['match'];
-    $dailyPickWrapper->field_daily_pick_team = $pickData['team'];
+
+    if (isset($pickData['match'])) {
+      $dailyPickWrapper->field_daily_pick_match = $pickData['match'];
+    }
+
+    if (isset($pickData['team'])) {
+      $dailyPickWrapper->field_daily_pick_team = $pickData['team'];
+    }
     $dailyPickWrapper->save();
   }
 
