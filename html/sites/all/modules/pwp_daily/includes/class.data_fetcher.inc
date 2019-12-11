@@ -6,15 +6,31 @@
 class pwp_daily_data_fetcher {
 
   /**
-   * @var \EntityFieldQuery
+   * @return null|array
+   * @throws \Exception
    */
-  protected $query;
+  public function fetchUserDailyGameSummary() {
+    global $user;
+    $dailyShowEntity = $this->getDailyShowEntity();
 
-  /**
-   * DailyDataFetcher constructor.
-   */
-  public function __construct() {
-    $this->query = new EntityFieldQuery();
+    if (!$dailyShowEntity) {
+      return NULL;
+    }
+
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'daily_pick')
+      ->fieldCondition('field_daily_pick_user', 'target_id', $user->uid)
+      ->fieldCondition('field_daily_pick_show', 'target_id', $dailyShowEntity->id);
+
+    $result = $query->execute();
+
+    if (isset($result['daily_pick'])) {
+      $entityIds = array_keys($result['daily_pick']);
+      return entity_load('daily_pick', $entityIds);
+    }
+
+    return NULL;
   }
 
   /**
@@ -36,6 +52,7 @@ class pwp_daily_data_fetcher {
       $showData->company = $showEntityWrapper->field_company->value();
       $showData->venue = $showEntityWrapper->field_venue->value();
       $showData->type = $showEntityWrapper->field_show_type->value();
+      $showData->perfect_ppv_bonus = intval($showEntityWrapper->field_perfect_ppv_bonus->value());
       $showData->matches = [];
 
       /** @var \Entity $match */
@@ -49,6 +66,7 @@ class pwp_daily_data_fetcher {
         $matchData->id = $match->id;
         $matchData->title = $match->title;
         $matchData->teams = [];
+        $matchData->points = intval($match->wrapper()->field_point_to_earn->value());
 
         $dailyTeamIds = array_column($match->field_daily_teams['und'], 'target_id');
         foreach (entity_load('daily_team', $dailyTeamIds) as $dailyTeam) {
@@ -83,11 +101,12 @@ class pwp_daily_data_fetcher {
    */
   public function getDailyShowEntity() {
     $now = new \DateTime();
-    $this->query
+    $query = new EntityFieldQuery();
+    $query
       ->entityCondition('entity_type', 'daily_show')
       ->fieldCondition('field_daily_game_date', 'value', $now->format('Y-m-d 00:00:00'));
 
-    $result = $this->query->execute();
+    $result = $query->execute();
 
     if (isset($result['daily_show'])) {
       $showEntities = entity_load('daily_show', array_keys($result['daily_show']));
