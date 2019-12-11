@@ -18,8 +18,7 @@ function pwp_daily_data_save() {
           'status' => 200,
           'data' => '',
         ]);
-
-        return;
+        exit();
       }
 
       throw new \Exception('Invalid Request Data.');
