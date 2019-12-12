@@ -1,5 +1,5 @@
 <script id="app-template" type="x-template">
-  <div>
+  <div class="dailyGameRoot">
     <template v-if="loading">
       Loading...
     </template>
@@ -12,16 +12,14 @@
       <div>No Daily Game</div>
     </template>
     <template v-else>
-      <div>
-        <component
-          :is="component"
-          :show="show"
-          :matches="show.matches"
-          :picks="picks"
-          @game-start="handleGameStart"
-          @game-end="handleGameEnd"
-        />
-      </div>
+      <component
+        :is="component"
+        :show="show"
+        :matches="show.matches"
+        :picks="picks"
+        @game-start="handleGameStart"
+        @game-end="handleGameEnd"
+      />
     </template>
   </div>
 </script>
@@ -50,15 +48,18 @@
     <interval v-if="!intervalEnded" :duration="duration" @complete="handleComplete">
       <template #default="{ elapsed }">
         <div class="dailyGameCountdown__content">
-          {{ setCountdown(elapsed) }}
-          <div class="dailyGameCountdownAnimated">
-            <div ref="countdownEl" class="dailyGameCountdownAnimated__element">{{ countdown }}</div>
-          </div>
+          <countdown-animation :countdown="elapsed / 1000" />
         </div>
       </template>
     </interval>
 
     <slot v-else />
+  </div>
+</script>
+
+<script id="countdown-animation-template" type="x-template">
+  <div class="dailyGameCountdownAnimated">
+    <div ref="countdownEl" class="dailyGameCountdownAnimated__element">{{ countdown }}</div>
   </div>
 </script>
 
@@ -83,24 +84,25 @@
 </script>
 
 <script id="match-template" type="x-template">
-  <div>
-    <h2>{{ title }}</h2>
-        <team
-          v-for="team in teams"
-          v-model="selected"
-          :key="team.id"
-          :id="team.id"
-          :checked="team.id === selected"
-          :wrestlers="team.wrestlers"
-          @input="handleTeamInput"
-        >
-          <template>
-            v-if="shouldAppend(index)"
-            #append
-          >
-            VS
-          </template>
-        </team>
+  <div class="dailyGameMatch">
+    <h2 class="dailyGameTitle">{{ title }}</h2>
+
+    <team
+      v-for="team in teams"
+      v-model="selected"
+      :key="team.id"
+      :id="team.id"
+      :checked="team.id === selected"
+      :wrestlers="team.wrestlers"
+      @input="handleTeamInput"
+    >
+      <template>
+        v-if="shouldAppend(index)"
+        #append
+      >
+        VS
+      </template>
+    </team>
   </div>
 </script>
 

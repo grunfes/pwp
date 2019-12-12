@@ -1,4 +1,4 @@
-/* global jQuery, _, axios, Drupal, Vue */
+/* global jQuery, _, axios, anime, Drupal, Vue */
 
 ;(function ($, _, axios, Drupal, Vue) {
   Drupal.behaviors.dailyGame = {
@@ -126,9 +126,26 @@
           },
           data: function () {
             return {
-              intervalEnded: false,
-              countdown: this.duration
+              intervalEnded: false
             };
+          },
+          methods: {
+            handleComplete: function () {
+              this.intervalEnded = true;
+            }
+          }
+        }
+      },
+
+      {
+        name: 'CountdownAnimation',
+        component: {
+          template: '#countdown-animation-template',
+          props: {
+            countdown: {
+              type: Number,
+              required: true
+            }
           },
           watch: {
             countdown: function () {
@@ -137,14 +154,6 @@
                 duration: 900,
                 scale: [3, 1]
               });
-            }
-          },
-          methods: {
-            setCountdown: function (time) {
-              this.countdown = time / 1000;
-            },
-            handleComplete: function () {
-              this.intervalEnded = true;
             }
           }
         }
