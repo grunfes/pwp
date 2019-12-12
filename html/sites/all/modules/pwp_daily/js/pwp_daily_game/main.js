@@ -126,12 +126,49 @@
           },
           data: function () {
             return {
-              intervalEnded: false
+              intervalEnded: false,
+              countdown: this.duration
             };
           },
+          watch: {
+            countdown: function () {
+              anime({
+                targets: this.$refs.countdownEl,
+                duration: 900,
+                scale: [3, 1]
+              });
+            }
+          },
           methods: {
+            setCountdown: function (time) {
+              this.countdown = time / 1000;
+            },
             handleComplete: function () {
               this.intervalEnded = true;
+            }
+          }
+        }
+      },
+
+      {
+        name: 'ProgressBar',
+        component: {
+          template: '#progress-bar-template',
+          props: {
+            duration: {
+              type: Number,
+              required: true
+            },
+            progress: {
+              type: Number,
+              required: true
+            }
+          },
+          computed: {
+            style: function () {
+              return {
+                width: this.progress * 100 / this.duration + '%'
+              };
             }
           }
         }

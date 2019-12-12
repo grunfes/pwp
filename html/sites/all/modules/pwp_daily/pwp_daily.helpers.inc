@@ -50,6 +50,11 @@ class pwp_daily_helpers {
       ],
       [
         'type' => 'file',
+        'data' => static::getPath('js/lib/anime.min.js'),
+        'preprocess' => FALSE,
+      ],
+      [
+        'type' => 'file',
         'data' => static::getPath('js/lib/vue.js'),
         'preprocess' => FALSE,
       ],
@@ -62,7 +67,12 @@ class pwp_daily_helpers {
    * @return string
    */
   public static function dailyPickTitleGenerator($data) {
-    return implode('-', array_filter([$data['user'], $data['show'], $data['match'], $data['team']]));
+    return implode('-', array_filter([
+      $data['user'],
+      $data['show'],
+      $data['match'],
+      $data['team'],
+    ]));
   }
 
 }

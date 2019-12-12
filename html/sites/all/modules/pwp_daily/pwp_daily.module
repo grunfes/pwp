@@ -71,6 +71,9 @@ function pwp_daily_block_view($delta = '') {
       $block['content'] = [
         '#theme' => 'pwp_daily_game',
         '#attached' => [
+          'css' => [
+            pwp_daily_helpers::getPath('css/styles.css'),
+          ],
           'js' => array_merge(
             pwp_daily_helpers::getSharedJSLibraries(),
             [

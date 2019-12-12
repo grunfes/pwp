@@ -1,0 +1,32 @@
+.dailyGameProgress {
+  position: relative;
+  height: 5px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.dailyGameProgress__inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: #d4180a;
+  transition: width 0.5s;
+}
+
+.dailyGameCountdown__content {
+  display: flex;
+  min-height: 120px;
+  justify-content: center;
+  align-items: center;
+}
+
+.dailyGameCountdownAnimated {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+}
+
+.dailyGameCountdownAnimated__element {
+  font-size: 42px;
+}

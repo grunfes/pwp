@@ -46,11 +46,15 @@
 </script>
 
 <script id="countdown-template" type="x-template">
-  <div>
+  <div class="dailyGameCountdown">
     <interval v-if="!intervalEnded" :duration="duration" @complete="handleComplete">
       <template #default="{ elapsed }">
-        Rumble in
-        {{ elapsed }}
+        <div class="dailyGameCountdown__content">
+          {{ setCountdown(elapsed) }}
+          <div class="dailyGameCountdownAnimated">
+            <div ref="countdownEl" class="dailyGameCountdownAnimated__element">{{ countdown }}</div>
+          </div>
+        </div>
       </template>
     </interval>
 
@@ -63,7 +67,7 @@
     <div>
       <interval :duration="5" @complete="handleChange">
         <template #default="{ elapsed }">
-          {{ elapsed }}
+          <progress-bar :duration="5 * 1000" :progress="elapsed" />
         </template>
       </interval>
 
@@ -119,6 +123,12 @@
     </ul>
 
     <slot name="append" />
+  </div>
+</script>
+
+<script id="progress-bar-template" type="x-template">
+  <div class="dailyGameProgress">
+    <div class="dailyGameProgress__inner" :style="style" />
   </div>
 </script>
 
