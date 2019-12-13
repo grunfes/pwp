@@ -12,48 +12,52 @@
       <div>No Daily Game</div>
     </template>
     <template v-else>
-      <component
-        :is="component"
-        :show="show"
-        :matches="show.matches"
-        :picks="picks"
-        @game-start="handleGameStart"
-        @game-end="handleGameEnd"
-      />
+      <transition name="slide-left" mode="out-in">
+        <component
+          :is="component"
+          :show="show"
+          :matches="show.matches"
+          :picks="picks"
+          @game-start="handleGameStart"
+          @game-end="handleGameEnd"
+        />
+      </transition>
     </template>
   </div>
 </script>
 
 <script id="game-summary-template" type="x-template">
-  <div>
-    <h2>Game Summary</h2>
-    <p>{{ picks }}</p>
+  <div class="dailGameSummary dailyGame__content">
+    <div class="dailyGameSummary__content">
+      <h2>Game Summary</h2>
+      <p>{{ picks }}</p>
+    </div>
   </div>
 </script>
 
 <script id="game-intro-template" type="x-template">
-  <div>
-    <h2>{{ show.title }}</h2>
-    <p>{{ show.type.name }}</p>
-    <p>{{ show.venue.name }}</p>
+  <div class="dailyGameIntro dailyGame__content">
+    <div class="dailyGameIntro__content">
+      <h2>{{ show.title }}</h2>
+      <p>{{ show.type.name }}</p>
+      <p>{{ show.venue.name }}</p>
 
-    <div class="button">
-      <a href="#" @click.prevent="$emit('game-start')">Start</a>
+      <div class="button">
+        <a href="#" @click.prevent="$emit('game-start')">Start</a>
+      </div>
     </div>
   </div>
 </script>
 
 <script id="countdown-template" type="x-template">
   <div class="dailyGameCountdown">
-    <interval v-if="!intervalEnded" :duration="duration" @complete="handleComplete">
+    <interval :duration="duration" @complete="handleComplete">
       <template #default="{ elapsed }">
-        <div class="dailyGameCountdown__content">
-          <countdown-animation :countdown="elapsed / 1000" />
+        <div class="dailyGameCountdown__content dailyGame__content">
+          <countdown-animation :countdown="get(elapsed)" />
         </div>
-      </template>
+      </template>t
     </interval>
-
-    <slot v-else />
   </div>
 </script>
 
@@ -64,65 +68,76 @@
 </script>
 
 <script id="game-template" type="x-template">
-  <countdown :key="index" :duration="3">
-    <div>
-      <interval :duration="5" @complete="handleChange">
-        <template #default="{ elapsed }">
-          <progress-bar :duration="5 * 1000" :progress="elapsed" />
-        </template>
-      </interval>
+  <div>
+    <transition name="slide-top" mode="out-in">
+      <countdown v-if="isCountdown" :key="index" :duration="3" @complete="handleCountdownComplete" />
+      <div v-else class="dailyGameShow">
+        <h2 class="dailyGameMatchTitle">
+          {{ match.title }}
+        </h2>
+        <interval :duration="5" @complete="handleChange">
+          <template #default="{ elapsed }">
+            <progress-bar :duration="5 * 1000" :progress="elapsed" />
+          </template>
+        </interval>
 
-      <match
-        :key="match.id"
-        :id="match.id"
-        :title="match.title"
-        :teams="match.teams"
-        @pick="handleTeamPick"
-      />
-    </div>
-  </countdown>
+        <match
+          :key="match.id"
+          :id="match.id"
+          :title="match.title"
+          :teams="match.teams"
+          @pick="handleTeamPick"
+        />
+      </div>
+    </transition>
+  </div>
 </script>
 
 <script id="match-template" type="x-template">
-  <div class="dailyGameMatch">
-    <h2 class="dailyGameTitle">{{ title }}</h2>
-
-    <team
-      v-for="team in teams"
-      v-model="selected"
-      :key="team.id"
-      :id="team.id"
-      :checked="team.id === selected"
-      :wrestlers="team.wrestlers"
-      @input="handleTeamInput"
-    >
-      <template>
-        v-if="shouldAppend(index)"
-        #append
+  <div class="dailyGameMatch dailyGame__content">
+    <div class="dailyGameMatch__content">
+      <team
+        v-for="(team, index) in teams"
+        v-model="selected"
+        :key="team.id"
+        :id="team.id"
+        :checked="team.id === selected"
+        :wrestlers="team.wrestlers"
+        @input="handleTeamInput"
       >
-        VS
-      </template>
-    </team>
+        <template
+          v-if="shouldAppend(index)"
+          #append
+        >
+          <div class="dailyGameTeam_append">
+            VS
+          </div>
+        </template>
+      </team>
+    </div>
   </div>
 </script>
 
 <script id="team-template" type="x-template">
-  <div>
-    <slot name="prepend">
-      <input
-        type="checkbox"
-        :checked="checked"
-        @input="handleInput"
-      />
-    </slot>
+  <div class="dailyGameTeam" :class="checkedCls">
+    <div class="dailyGameTeam__selector">
+      <slot name="prepend">
+        <input
+          type="checkbox"
+          :checked="checked"
+          @click="handleInput"
+        />
+      </slot>
 
-    <ul>
-      <li
-        v-for="wrestler in wrestlers"
-      >
-        {{ wrestler.title }}
-      </li>
-    </ul>
+      <ul class="dailyGameTeamWrestlers">
+        <li
+          v-for="wrestler in wrestlers"
+          @click="handleInput"
+        >
+          {{ wrestler.title }}
+        </li>
+      </ul>
+    </div>
 
     <slot name="append" />
   </div>

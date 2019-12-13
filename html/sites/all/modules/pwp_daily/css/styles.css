@@ -1,3 +1,29 @@
+.block-pwp-daily {
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.dailyGame__content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 240px;
+  padding: 25px;
+}
+
+.dailyGameMatchTitle {
+  margin: 0;
+  font-size: 20px;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: bold;
+  padding: 15px;
+  background-color: #070f3a;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+  text-align: center;
+}
+
 .dailyGameProgress {
   position: relative;
   height: 5px;
@@ -14,13 +40,6 @@
   transition: width 0.5s;
 }
 
-.dailyGameCountdown__content {
-  display: flex;
-  min-height: 120px;
-  justify-content: center;
-  align-items: center;
-}
-
 .dailyGameCountdownAnimated {
   display: flex;
   justify-content: center;
@@ -29,4 +48,74 @@
 
 .dailyGameCountdownAnimated__element {
   font-size: 42px;
+}
+
+.dailyGameTeam {
+  display: flex;
+  flex-direction: column;
+}
+
+.dailyGameTeam__selector {
+  display: flex;
+  align-self: center;
+  align-items: center;
+  font-size: 24px;
+  cursor: pointer;
+}
+.dailyGameTeam__selector input[type="checkbox"] {
+  padding: 0;
+  margin: 0;
+}
+
+.dailyGameTeam_append {
+  align-self: center;
+  font-size: 16px;
+}
+
+.dailyGameTeamWrestlers {
+  display: flex;
+  margin: 0;
+  padding: 0.2em 0 0 0;
+  list-style: none;
+}
+
+.dailyGameTeamWrestlers li:first-child {
+  padding-left: 15px;
+}
+
+.dailyGameTeamWrestlers:hover,
+.dailyGameTeam__checked .dailyGameTeam__selector {
+  color: #d4180a;
+}
+
+.slide-left-enter-active, .slide-left-leave-active {
+  transition: transform 0.5s;
+}
+
+.slide-left-enter {
+  transform: translateX(100%);
+}
+
+.slide-left-enter-to, .slide-left-leave {
+  transform: translateX(0);
+}
+
+.slide-left-leave-to {
+  transform: translateX(-100%);
+}
+
+.slide-top-enter-active, .slide-top-leave-active {
+  transition: transform 0.5s;
+}
+
+.slide-top-enter {
+  transform: translateY(100%);
+}
+
+.slide-top-enter-to, .slide-top-leave {
+  transform: translateY(0);
+}
+
+.slide-top-leave-to {
+  transform: translateY(-100%);
 }

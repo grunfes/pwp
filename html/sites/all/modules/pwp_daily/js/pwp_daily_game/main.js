@@ -59,13 +59,12 @@
                 }
               })
               .then(function (response) {
-                console.log(response);
+                this.picks = picks;
+                this.component = 'game-summary';
               }.bind(this))
               .catch(function (error) {
                 this.error = error;
               }.bind(this));
-
-              // this.component = 'game-summary';
             }
           }
         }
@@ -99,7 +98,7 @@
           methods: {
             update: function () {
               this.elapsed -= this.interval;
-              if (this.elapsed <= 0) {
+              if (this.elapsed < 0) {
                 clearInterval(this.$__interval);
                 this.$emit('complete');
               }
@@ -130,8 +129,15 @@
             };
           },
           methods: {
+            get: function (value) {
+              if (value !== 0) {
+                return value / 1000;
+              }
+
+              return 'RUMBLE';
+            },
             handleComplete: function () {
-              this.intervalEnded = true;
+              this.$emit('complete');
             }
           }
         }
@@ -143,7 +149,7 @@
           template: '#countdown-animation-template',
           props: {
             countdown: {
-              type: Number,
+              type: [String, Number],
               required: true
             }
           },
@@ -211,7 +217,8 @@
           data: function () {
             return {
               index: 0,
-              picks: {}
+              picks: {},
+              isCountdown: true
             };
           },
           computed: {
@@ -220,8 +227,13 @@
             }
           },
           methods: {
+            handleCountdownComplete: function () {
+              this.isCountdown = false;
+            },
+
             handleChange: function () {
               if (this.index < this.matches.length - 1) {
+                this.isCountdown = true;
                 this.index += 1;
                 return;
               }
@@ -294,9 +306,16 @@
               required: true
             }
           },
+          computed: {
+            checkedCls: function () {
+              return [
+                { 'dailyGameTeam__checked': this.checked }
+              ];
+            }
+          },
           methods: {
-            handleInput: function (e) {
-              this.$emit('input', e.target.checked ? this.id : undefined);
+            handleInput: function () {
+              this.$emit('input', !this.checked ? this.id : undefined);
             }
           }
         }
