@@ -25,6 +25,10 @@ class pwp_daily_data_saver {
   public function save($data) {
     global $user;
 
+    if (user_is_anonymous()) {
+      throw new Exception('Not allowed.');
+    }
+
     $dataFetcher = new pwp_daily_data_fetcher();
     $showEntity = $dataFetcher->getDailyShowEntity();
 
@@ -45,18 +49,12 @@ class pwp_daily_data_saver {
         }
       }
 
-      if (empty($data['picks'])) {
-        $this->savePick([
-          'show' => $data['show'],
-          'match' => NULL,
-          'team' => NULL,
-          'user' => $user->uid,
-        ]);
-      }
-      else {
+      $savedPicks = array();
+
+      if (!empty($data['picks'])) {
         foreach ($data['picks'] as $pick) {
           $this->validatePick($pick, $validKeys);
-          $this->savePick(array_merge(
+          $savedPicks[] = $this->savePick(array_merge(
             $pick,
             [
               'show' => $data['show'],
@@ -66,10 +64,44 @@ class pwp_daily_data_saver {
         }
       }
 
+      $this->saveResult($showEntity, $savedPicks, $user);
+
+//      throw new \Exception('Not Implemented.');
       return;
     }
 
     throw new \Exception("No Daily Show Found({$data['show']}).");
+  }
+
+  /**
+   * @param \Entity $show
+   * @param \Entity[] $picks
+   * @param \stdClass $user
+   *
+   * @throws \EntityMetadataWrapperException
+   */
+  protected function saveResult($show, $picks, $user) {
+    $title = sprintf(
+      '%s %s results (%s)',
+      $show->title, $user->name,
+      $show->field_daily_game_date['und'][0]['value']
+    );
+
+    $dailyResult = entity_create('daily_results', [
+      'type' => 'daily_results',
+      'title' => $title,
+    ]);
+
+    $dailyResultWrapper = entity_metadata_wrapper('daily_results', $dailyResult);
+    $dailyResultWrapper->field_daily_show_reference = $show;
+    $dailyResultWrapper->field_daily_picks_reference = $picks;
+    $dailyResultWrapper->field_daily_user_reference = $user;
+
+    $score = $this->calculateScore($picks, $show);
+    $dailyResultWrapper->field_daily_score = $score->points;
+    $dailyResultWrapper->field_daily_perfect_game = $score->perfectGame;
+
+    $dailyResultWrapper->save();
   }
 
   /**
@@ -100,6 +132,7 @@ class pwp_daily_data_saver {
       $dailyPickWrapper->field_daily_pick_team = $pickData['team'];
     }
     $dailyPickWrapper->save();
+    return $dailyPick;
   }
 
   /**
@@ -119,4 +152,31 @@ class pwp_daily_data_saver {
     }
   }
 
+  /**
+   * @param \Entity[] $picks
+   * @param \Entity $show
+   *
+   * @return \stdClass
+   */
+  protected function calculateScore($picks, $show) {
+    $score = new stdClass();
+    $score->perfectGame = false;
+    $winningMatchesCount = 0;
+
+    $score->points = array_reduce($picks, function ($points, $pick) use (&$winningMatchesCount) {
+      $pickWrapper = $pick->wrapper();
+      if ($pickWrapper->field_daily_pick_team->value()->wrapper()->field_daily_winning_team->value()) {
+        $winningMatchesCount += 1;
+        return $points + floatval($pickWrapper->field_daily_pick_match->value()->wrapper()->field_point_to_earn->value());
+      }
+      return $points;
+    }, 0.0);
+
+    if (count($show->wrapper()->field_daily_matches->value()) === $winningMatchesCount) {
+      $score->perfectGame = true;
+      $score->points += floatval($show->wrapper()->field_perfect_ppv_bonus->value());
+    }
+
+    return $score;
+  }
 }

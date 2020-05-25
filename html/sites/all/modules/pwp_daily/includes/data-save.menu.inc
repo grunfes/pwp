@@ -5,6 +5,7 @@
  */
 function pwp_daily_data_save() {
   try {
+    $transaction = db_transaction();
     $requestMethod = strtoupper($_SERVER['REQUEST_METHOD']);
 
     if ($requestMethod === 'POST') {
@@ -12,7 +13,7 @@ function pwp_daily_data_save() {
 
       if (($data = json_decode($requestData, TRUE)) !== NULL && !empty($data['show']) && isset($data['picks']) && is_array($data['picks'])) {
         $dataSaver = new pwp_daily_data_saver();
-//        $dataSaver->save($data);
+        $dataSaver->save($data);
 
         drupal_json_output([
           'status' => 200,
@@ -27,6 +28,7 @@ function pwp_daily_data_save() {
     throw new \Exception("Request Method({$requestMethod}) not supported.");
   }
   catch (\Exception $exception) {
+    $transaction->rollback();
     watchdog('pwp_daily', $exception->getMessage(), [], WATCHDOG_CRITICAL);
     drupal_add_http_header('Status', '500 Internal Server Error');
   }
