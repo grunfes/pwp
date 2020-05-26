@@ -11,13 +11,20 @@
     <template v-else-if="!hasDailyGame">
       <div>No Daily Game</div>
     </template>
+    <template v-else-if="hasUserPlayer">
+      <game-summary
+        :summary="gameData.summary"
+        :user="gameData.user"
+      />
+    </template>
     <template v-else>
       <transition name="slide-left" mode="out-in">
         <component
           :is="component"
-          :show="show"
-          :matches="show.matches"
-          :picks="picks"
+          :show="gameData.show"
+          :matches="gameData.show.matches"
+          :user="gameData.user"
+          :summary="summary"
           @game-start="handleGameStart"
           @game-end="handleGameEnd"
         />
@@ -27,10 +34,15 @@
 </script>
 
 <script id="game-summary-template" type="x-template">
-  <div class="dailGameSummary dailyGame__content">
+  <div :class="klass" class="dailGameSummary dailyGame__content">
     <div class="dailyGameSummary__content">
       <h2>Game Summary</h2>
-      <p>{{ picks }}</p>
+      <div class="dailyGameSummary_score">{{ user.name }} you <span v-if="summary.perfectGame">played perfectly</span> and scored {{ summary.score }} points in total</div>
+      <ul>
+        <li v-for="(item, index) in summary.picks" :key="index">
+          {{ item }}
+        </li>
+      </ul>
     </div>
   </div>
 </script>
@@ -39,8 +51,8 @@
   <div class="dailyGameIntro dailyGame__content">
     <div class="dailyGameIntro__content">
       <h2>{{ show.title }}</h2>
-      <p>{{ show.type.name }}</p>
-      <p>{{ show.venue.name }}</p>
+      <p v-if="show.type">{{ show.type.name }}</p>
+      <p v-if="show.venue">{{ show.venue.name }}</p>
 
       <div class="button">
         <a href="#" @click.prevent="$emit('game-start')">Start</a>

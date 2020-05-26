@@ -6,31 +6,64 @@
 class pwp_daily_data_fetcher {
 
   /**
-   * @return null|array
+   * @return \stdClass|NULL
    * @throws \Exception
    */
-  public function fetchUserDailyGameSummary() {
+  public function fetchUserDailyGameSummary($showEntity) {
     global $user;
-    $dailyShowEntity = $this->getDailyShowEntity();
+    $data = NULL;
 
-    if (!$dailyShowEntity) {
-      return NULL;
+    if (!$showEntity) {
+      return $data;
     }
 
     $query = new EntityFieldQuery();
     $query
       ->entityCondition('entity_type', 'daily_results')
       ->fieldCondition('field_daily_user_reference', 'target_id', $user->uid)
-      ->fieldCondition('field_daily_show_reference', 'target_id', $dailyShowEntity->id);
+      ->fieldCondition('field_daily_show_reference', 'target_id', $showEntity->id);
 
     $result = $query->execute();
 
-    if (isset($result['daily_results'])) {
+    if (isset($result['daily_results']) && count($result['daily_results']) > 0) {
+      $data = new stdClass();
       $entityIds = array_keys($result['daily_results']);
-      return entity_load('daily_results', $entityIds);
+      $entities = entity_load('daily_results', $entityIds);
+      $entity = array_pop($entities);
+      $entityWrapper = entity_metadata_wrapper('daily_results', $entity);
+
+      $data->perfectGame = $entityWrapper->field_daily_perfect_game->value();
+      $data->score = $entityWrapper->field_daily_score->value();
+      $data->bonus = floatval($showEntity->wrapper()->field_perfect_ppv_bonus->value());
+
+      $data->picks = array_map(function ($pick) {
+        $pickData = new stdClass();
+        $pickWrapper = $pick->wrapper();
+        $pickMatch = $pickWrapper->field_daily_pick_match->value()->wrapper();
+        $userPickWrapper = $pickWrapper->field_daily_pick_team->value()->wrapper();
+
+        $pickData->match = $pickMatch->title->value();
+        $pickData->points = floatval($pickMatch->field_point_to_earn->value());
+        $pickData->teams = array_map(function ($team) use ($userPickWrapper) {
+          $teamData = new stdClass();
+          $teamWrapper = $team->wrapper();
+          $teamData->title = $teamWrapper->title->value();
+          $teamData->userPick = $userPickWrapper->id->value() == $teamWrapper->id->value();
+          $teamData->winningTeam = boolval($teamWrapper->field_daily_winning_team->value());
+          $teamData->wrestlers = array_map(function ($wrestler) {
+            return $wrestler->title;
+          }, $teamWrapper->field_daily_wrestlers->value());
+
+          return $teamData;
+        } ,$pickMatch->field_daily_teams->value());
+
+        $pickTeam = $pickWrapper->field_daily_pick_team->value();
+
+        return $pickData;
+      }, $entityWrapper->field_daily_picks_reference->value());
     }
 
-    return NULL;
+    return $data;
   }
 
   /**
@@ -42,20 +75,32 @@ class pwp_daily_data_fetcher {
    * @throws \Exception
    */
   public function fetchDailyGameData() {
-    $showEntity = $this->getDailyShowEntity();
-    $showData = new stdClass();
+    global $user;
 
-    $kk = $this->fetchUserDailyGameSummary();
+    $showEntity = $this->getDailyShowEntity();
+    $data = new stdClass();
+    $data->hasUserPlayed = false;
+    $data->hasDailyGame = $showEntity instanceof Entity;
+    $data->show = new stdClass();
+    $data->user = new stdClass();
+    $data->user->name = $user->name;
+    $data->summary = new stdClass();
+
+    $userDailyGameSummary =  $this->fetchUserDailyGameSummary($showEntity);
+    if ($userDailyGameSummary !== NULL) {
+      $data->hasUserPlayed = true;
+      $data->summary = $userDailyGameSummary;
+    }
 
     if ($showEntity) {
       $showEntityWrapper = entity_metadata_wrapper('daily_show', $showEntity);
-      $showData->id = $showEntity->id;
-      $showData->title = $showEntity->title;
-      $showData->company = $showEntityWrapper->field_company->value();
-      $showData->venue = $showEntityWrapper->field_venue->value();
-      $showData->type = $showEntityWrapper->field_show_type->value();
-      $showData->perfect_ppv_bonus = intval($showEntityWrapper->field_perfect_ppv_bonus->value());
-      $showData->matches = [];
+      $data->show->id = $showEntity->id;
+      $data->show->title = $showEntity->title;
+      $data->show->company = $showEntityWrapper->field_company->value();
+      $data->show->venue = $showEntityWrapper->field_venue->value();
+      $data->show->type = $showEntityWrapper->field_show_type->value();
+      $data->show->perfect_ppv_bonus = intval($showEntityWrapper->field_perfect_ppv_bonus->value());
+      $data->show->matches = [];
 
       /** @var \Entity $match */
       foreach ($showEntityWrapper->field_daily_matches->value() as $match) {
@@ -64,7 +109,7 @@ class pwp_daily_data_fetcher {
         }
 
         $matchData = new stdClass();
-        $showData->matches[] = $matchData;
+        $data->show->matches[] = $matchData;
         $matchData->id = $match->id;
         $matchData->title = $match->title;
         $matchData->teams = [];
@@ -94,7 +139,7 @@ class pwp_daily_data_fetcher {
       }
     }
 
-    return $showData;
+    return $data;
   }
 
   /**

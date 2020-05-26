@@ -13,11 +13,11 @@ function pwp_daily_data_save() {
 
       if (($data = json_decode($requestData, TRUE)) !== NULL && !empty($data['show']) && isset($data['picks']) && is_array($data['picks'])) {
         $dataSaver = new pwp_daily_data_saver();
-        $dataSaver->save($data);
+        $data = $dataSaver->save($data);
 
         drupal_json_output([
           'status' => 200,
-          'data' => '',
+          'data' => $data,
         ]);
         exit();
       }

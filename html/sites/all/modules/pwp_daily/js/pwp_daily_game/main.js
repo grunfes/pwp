@@ -9,16 +9,20 @@
           template: '#app-template',
           data: function () {
             return {
-              show: undefined,
+              gameData: {},
               loading: true,
               error: undefined,
-              picks: {},
+              summary: {},
               component: 'game-intro'
             };
           },
           computed: {
             hasDailyGame: function () {
-              return !_.isEmpty(this.show);
+              return this.gameData.hasDailyGame;
+            },
+
+            hasUserPlayer: function () {
+              return this.gameData.hasUserPlayed;
             }
           },
           mounted: function () {
@@ -27,7 +31,7 @@
               var responseData = response.data;
 
               if (response.status === 200 && responseData.status === 200) {
-                this.show = responseData.data;
+                this.gameData = responseData.data;
                 this.loading = false;
               }
             }.bind(this))
@@ -51,7 +55,7 @@
               .value();
 
               axios.post('/pwp_daily/data/save', {
-                show: this.show.id,
+                show: this.gameData.show.id,
                 picks: picksData
               }, {
                 headers: {
@@ -59,8 +63,11 @@
                 }
               })
               .then(function (response) {
-                this.picks = picks;
-                this.component = 'game-summary';
+                var responseData = response.data;
+                if (response.status === 200 && responseData.status === 200) {
+                  this.summary = responseData.data;
+                  this.component = 'game-summary';
+                }
               }.bind(this))
               .catch(function (error) {
                 this.error = error;
@@ -327,9 +334,20 @@
           template: '#game-summary-template',
           inheritAttrs: false,
           props: {
-            picks: {
+            summary: {
               type: Object,
-              default: function () { return {}; }
+              required: true
+            },
+            user: {
+              type: Object,
+              required: true
+            }
+          },
+          computed: {
+            klass: function () {
+              return {
+                'dailyGameSummary--perfect': this.summary.perfectGame || false
+              };
             }
           }
         }

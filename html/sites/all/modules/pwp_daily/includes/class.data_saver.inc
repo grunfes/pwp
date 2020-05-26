@@ -28,9 +28,14 @@ class pwp_daily_data_saver {
     if (user_is_anonymous()) {
       throw new Exception('Not allowed.');
     }
-
     $dataFetcher = new pwp_daily_data_fetcher();
+
     $showEntity = $dataFetcher->getDailyShowEntity();
+    $userDailyGameSummary = $dataFetcher->fetchUserDailyGameSummary($showEntity);
+
+    if ($userDailyGameSummary !== NULL) {
+      return $userDailyGameSummary;
+    }
 
     if ($showEntity instanceof Entity && $showEntity->wrapper()
         ->get('id')
@@ -66,8 +71,7 @@ class pwp_daily_data_saver {
 
       $this->saveResult($showEntity, $savedPicks, $user);
 
-//      throw new \Exception('Not Implemented.');
-      return;
+      return $dataFetcher->fetchUserDailyGameSummary($showEntity);
     }
 
     throw new \Exception("No Daily Show Found({$data['show']}).");
