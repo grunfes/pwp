@@ -19,15 +19,15 @@ class pwp_daily_data_fetcher {
 
     $query = new EntityFieldQuery();
     $query
-      ->entityCondition('entity_type', 'daily_pick')
-      ->fieldCondition('field_daily_pick_user', 'target_id', $user->uid)
-      ->fieldCondition('field_daily_pick_show', 'target_id', $dailyShowEntity->id);
+      ->entityCondition('entity_type', 'daily_results')
+      ->fieldCondition('field_daily_user_reference', 'target_id', $user->uid)
+      ->fieldCondition('field_daily_show_reference', 'target_id', $dailyShowEntity->id);
 
     $result = $query->execute();
 
-    if (isset($result['daily_pick'])) {
-      $entityIds = array_keys($result['daily_pick']);
-      return entity_load('daily_pick', $entityIds);
+    if (isset($result['daily_results'])) {
+      $entityIds = array_keys($result['daily_results']);
+      return entity_load('daily_results', $entityIds);
     }
 
     return NULL;
@@ -44,6 +44,8 @@ class pwp_daily_data_fetcher {
   public function fetchDailyGameData() {
     $showEntity = $this->getDailyShowEntity();
     $showData = new stdClass();
+
+    $kk = $this->fetchUserDailyGameSummary();
 
     if ($showEntity) {
       $showEntityWrapper = entity_metadata_wrapper('daily_show', $showEntity);
