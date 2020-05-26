@@ -24,10 +24,7 @@ class pwp_daily_data_saver {
    */
   public function save($data) {
     global $user;
-
-    if (user_is_anonymous()) {
-      throw new Exception('Not allowed.');
-    }
+    
     $dataFetcher = new pwp_daily_data_fetcher();
 
     $showEntity = $dataFetcher->getDailyShowEntity();

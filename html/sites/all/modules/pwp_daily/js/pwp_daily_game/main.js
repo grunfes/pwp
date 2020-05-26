@@ -21,7 +21,7 @@
               return this.gameData.hasDailyGame;
             },
 
-            hasUserPlayer: function () {
+            hasUserPlayed: function () {
               return this.gameData.hasUserPlayed;
             }
           },

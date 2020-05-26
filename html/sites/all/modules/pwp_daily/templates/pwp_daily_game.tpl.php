@@ -11,7 +11,7 @@
     <template v-else-if="!hasDailyGame">
       <div>No Daily Game</div>
     </template>
-    <template v-else-if="hasUserPlayer">
+    <template v-else-if="hasUserPlayed">
       <game-summary
         :summary="gameData.summary"
         :user="gameData.user"
