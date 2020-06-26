@@ -30,7 +30,7 @@ function pwp_daily_menu() {
     'pwp_daily/data/save' => [
       'title' => 'PWP Daily Data Save',
       'page callback' => 'pwp_daily_data_save',
-      'access callback' => ['play pwp_daily game'],
+      'access callback' => TRUE,
       'file' => 'includes/data-save.menu.inc',
       'type' => MENU_CALLBACK,
     ],

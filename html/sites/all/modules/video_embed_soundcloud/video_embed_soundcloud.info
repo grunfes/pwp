@@ -1,0 +1,11 @@
+name = "Video Embed Soundcloud"
+description = "Expose a field type for embedding videos from soundcloud."
+core = 7.x
+package = Media
+
+; Information added by Drupal.org packaging script on 2016-10-05
+version = "7.x-1.0"
+core = "7.x"
+project = "video_embed_soundcloud"
+datestamp = "1475676591"
+

@@ -1,7 +1,7 @@
 <script id="app-template" type="x-template">
   <div class="dailyGameRoot">
     <template v-if="loading">
-      Loading...
+      <div class="big red">Loading...</div>
     </template>
     <template v-else-if="error">
       <div class="messages error" style="display: block !important;">
@@ -9,7 +9,7 @@
       </div>
     </template>
     <template v-else-if="!hasDailyGame">
-      <div>No Daily Game</div>
+      <div class="red big">No Daily Game</div>
     </template>
     <template v-else-if="hasUserPlayed">
       <game-summary
@@ -26,7 +26,7 @@
           :user="gameData.user"
           :summary="summary"
           @game-start="handleGameStart"
-          @game-end="handleGameEnd"
+          @game-end="handleGameEnd" 
         />
       </transition>
     </template>
@@ -36,13 +36,13 @@
 <script id="game-summary-template" type="x-template">
   <div :class="klass" class="dailGameSummary dailyGame__content">
     <div class="dailyGameSummary__content">
-      <h2>Game Summary</h2>
-      <div class="dailyGameSummary_score">{{ user.name }} you <span v-if="summary.perfectGame">played perfectly</span> and scored {{ summary.score }} points in total</div>
-      <ul>
+      <h2>Daily Game Summary on <?php echo date("D, d M Y"); ?></h2>
+      <div class="dailyGameSummary_score"><span class="user">{{ user.name }}</span>, today you <span class="perfect" v-if="summary.perfectGame">played perfectly and </span>scored <span class="score">{{ summary.score }}</span> points in total. Go to your <a class="link" href="/user">profile</a> to check the stats.</div>
+      <!-- <ul>
         <li v-for="(item, index) in summary.picks" :key="index">
           {{ item }}
         </li>
-      </ul>
+      </ul> -->
     </div>
   </div>
 </script>
@@ -50,9 +50,10 @@
 <script id="game-intro-template" type="x-template">
   <div class="dailyGameIntro dailyGame__content">
     <div class="dailyGameIntro__content">
-      <h2>{{ show.title }}</h2>
-      <p v-if="show.type">{{ show.type.name }}</p>
-      <p v-if="show.venue">{{ show.venue.name }}</p>
+      <h3>Welcome to Daily Pickem Game. Press Start button to start the game.</h3>
+      <!-- <h3 class="big red">{{ show.title }}</h3> -->
+      <!-- <p v-if="show.type">Show type: {{ show.type.name }}</p> -->
+      <!-- <p v-if="show.venue">Venue: {{ show.venue.name }}</p> -->
 
       <div class="button">
         <a href="#" @click.prevent="$emit('game-start')">Start</a>
@@ -84,9 +85,9 @@
     <transition name="slide-top" mode="out-in">
       <countdown v-if="isCountdown" :key="index" :duration="3" @complete="handleCountdownComplete" />
       <div v-else class="dailyGameShow">
-        <h2 class="dailyGameMatchTitle">
+        <h3 class="dailyGameMatchTitle">
           {{ match.title }}
-        </h2>
+        </h3>
         <interval :duration="5" @complete="handleChange">
           <template #default="{ elapsed }">
             <progress-bar :duration="5 * 1000" :progress="elapsed" />

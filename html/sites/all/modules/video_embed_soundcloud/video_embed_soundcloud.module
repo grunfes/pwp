@@ -1,0 +1,224 @@
+<?php
+
+/**
+ * @file
+ * Add a handler for metacafe videos to Video Embed Field
+ * with this module you can add videos from soundcloud.com.
+ */
+
+/**
+ * Implements hook_video_embed_handler_info().
+ */
+function video_embed_soundcloud_video_embed_handler_info() {
+  $handlers = array();
+  $handlers['soundcloud'] = array(
+    'title' => 'Soundcloud Video',
+    'function' => 'video_embed_soundcloud_handle_video',
+    'thumbnail_function' => 'video_embed_soundcloud_handle_thumbnail',
+    'form' => 'video_embed_soundcloud_form',
+    'domains' => array(
+      'soundcloud.com',
+    ),
+  // Defaults are the defaults to provide to your form.
+    'defaults' => array(
+      'width' => 640,
+      'height' => 480,
+      'allowfullscreen' => TRUE,
+      'allowautoplay' => FALSE,
+    ),
+  );
+  return $handlers;
+}
+
+/**
+ * Provide a form to configure out video settings.
+ *
+ * @param array $defaults
+ *   default/current values for your provider, the currently saved settings
+ *   with empty values filled with the defaults provided in info hook
+ *
+ * @return array
+ *   form as defined by forms api
+ */
+function video_embed_soundcloud_form($defaults) {
+  $form = array();
+  $form['height'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Player Height'),
+    '#description' => t('The height of the player.'),
+    '#default_value' => $defaults['height'],
+    '#element_validate' => array('_video_embed_soundcloud_element_validate'),
+  );
+  $form['width'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Player Width'),
+    '#description' => t('The width of the player.'),
+    '#default_value' => $defaults['width'],
+    '#element_validate' => array('_video_embed_soundcloud_element_validate'),
+  );
+  $form['allowfullscreen'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Allow Fullscreen'),
+    '#desecription' => t('This will allow the video to be fullscreened.'),
+    '#default_value' => $defaults['allowfullscreen'],
+  );
+  $form['allowautoplay'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Allow Autoplay'),
+    '#desecription' => t('This will allow the video to autoplay.'),
+    '#default_value' => $defaults['allowautoplay'],
+  );
+  return $form;
+}
+
+/**
+ * This is the video handler (the 'function' key from handler_info).
+ *
+ * @param string $url
+ *   the full video url
+ *
+ * @param array $settings
+ *   an associative array of this handlers settings, from the settings form
+ *
+ * @return string
+ *   the embed code for the video
+ */
+function video_embed_soundcloud_handle_video($url, $settings) {
+
+  $embed = _video_embed_soundcloud_get_oembedcode($url);
+  if ($embed) {
+    $emb = "<div style=' width:" . $settings['width'] . "px;height:" . $settings['height'] . "px; '>" . $embed['html'] . "</div>";
+    $video = array(
+      '#markup' => $emb,
+    );
+    return $video;
+  }
+  else {
+    return '';
+  }
+
+}
+
+/**
+ * Retreive the thumbnail for the soundcloud video.
+ *
+ * @param string $url
+ *   the url of the video as entered by the user
+ *
+ * @return array
+ *   an array with the keys:
+ *     'url' => the url to retrieve the thumbnail from
+ *
+ * function video_embed_soundcloud_handle_thumbnail($url) {
+ * $embed = _video_embed_soundcloud_get_oembedcode($url);
+ * return array(
+ * 'url' => $embed['thumbnail_url'],
+ * );
+ * }
+ */
+
+/**
+ * Function for validating width and height in setting form.
+ */
+function _video_embed_soundcloud_element_validate($element, &$form_state) {
+  $check = _video_embed_soundcloud_check_input($element['#value']);
+  if (!empty($element['#value']) && !$check) {
+    form_error($element, t('The "!name" option must contain a valid value. You may either leave the text field empty or enter a string like "640px" or "640"', array('!name' => t($element['#title']))));
+  }
+}
+/**
+ * Helper function to check for a valid input in height and width textfields.
+ *
+ * @param string $input
+ *   the string that contains input from setting form
+ *
+ * @return bool
+ *   if input is valid returns true else false
+ */
+function _video_embed_soundcloud_check_input($input) {
+  $input = check_plain($input);
+  if ($input == '') {
+    return FALSE;
+  }
+  $size = drupal_strlen($input);
+  $cur_char = '';
+  for ($i = 0; $i < $size; $i++) {
+    $cur_char = drupal_substr($input, $i, 1);
+    if ($cur_char >= '0' && $cur_char <= '9') {
+      continue;
+    }
+    break;
+  }
+  if ($i == $size) {
+    return TRUE;
+  }
+  elseif ($i > 0 && $i == $size - 2) {
+    if (drupal_substr($input, $i, 2) == 'px') {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Implementation of video_embed_soundcloud_parse_url.
+ *
+ * @param
+ *  $embed, URL for video
+ *
+ * @return
+ *   Normalized URI of video
+ */
+function _video_embed_soundcloud_parse_url($embed) {
+
+  $patterns = array(
+    '@soundcloud\.com/([0-9A-Za-z\@\&\$_-]+)/([0-9A-Za-z\@\&\$_-]+)/([0-9A-Za-z\@\&\$_-]+)@i',
+    '@soundcloud\.com/([0-9A-Za-z\@\&\$_-]+)/([0-9A-Za-z\@\&\$_-]+)@i',
+    '@soundcloud\.com/([0-9A-Za-z\@\&\$_-]+)@i',
+  );
+
+  foreach ($patterns as $pattern) {
+    preg_match($pattern, $embed, $matches);
+    if (isset($matches[1]) && !isset($matches[2])) {
+      $uri = file_stream_wrapper_uri_normalize('soundcloud://u/' . $matches[1]);
+      return $uri;
+    }  // End of condition 1 only for u
+
+    if (isset($matches[2]) && !isset($matches[3])) {
+      if ($matches[1] == 'groups') {
+        $uri = file_stream_wrapper_uri_normalize('soundcloud://g/' . $matches[2]);
+      }
+      else {
+        $uri = file_stream_wrapper_uri_normalize('soundcloud://u/' . $matches[1] . '/a/' . $matches[2]);
+      }
+      return $uri;
+    }
+
+    if (isset($matches[3])) {
+      if ($matches[2] == 'sets') {
+        $uri = file_stream_wrapper_uri_normalize('soundcloud://u/' . $matches[1] . '/s/' . $matches[3]);
+        return $uri;
+      }
+    }
+  }
+
+}
+
+/**
+ * Implementation of video_embed_soundcloud_get_oembedcode.
+ *
+ * @param
+ * uri, URI of video
+ */
+function _video_embed_soundcloud_get_oembedcode($url) {
+
+  $oembed_url = url('http://soundcloud.com/oembed', array('query' => array('url' => $url, 'format' => 'json')));
+  $response = drupal_http_request($oembed_url);
+  if (!isset($response->error)) {
+    $embed_html = drupal_json_decode($response->data);
+    return $embed_html;
+  }
+  else {
+    return FALSE;
+  }
+}

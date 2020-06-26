@@ -246,7 +246,7 @@
  */
 $databases['default']['default'] = array(
   'driver' => 'mysql',
-  'database' => 'pwp', 
+  'database' => 'pwp_d2', 
   'username' => 'root',
   'password' => 'root',
   'host' => 'db',

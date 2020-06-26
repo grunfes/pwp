@@ -3,24 +3,33 @@
   overflow: hidden;
 }
 
+.block-pwp-daily h2 {
+  z-index: 100;
+}
+
 .dailyGame__content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 240px;
+  text-align: center;
   padding: 25px;
+}
+
+.dailyGameIntro__content div.button {
+  float: none;
+  width: auto;
+  margin: 10px auto;
+  text-align: center;
+  display: inline-block;
 }
 
 .dailyGameMatchTitle {
   margin: 0;
   font-size: 20px;
-  color: #fff;
+  /* color: #fff; */
   text-transform: uppercase;
   font-weight: bold;
   padding: 15px;
-  background-color: #070f3a;
+  /* background-color: #070f3a;
   border-top-right-radius: 5px;
-  border-top-left-radius: 5px;
+  border-top-left-radius: 5px; */
   text-align: center;
 }
 
@@ -55,11 +64,22 @@
   flex-direction: column;
 }
 
+.dailyGameTeam li {
+  margin-right: 1px;
+}
+.dailyGameTeam li:after:not(:last-child) {
+  display: inline-block;
+  content: ',';
+  width: 10px;
+  height: auto;
+  margin-right: 5px;
+}
+
 .dailyGameTeam__selector {
   display: flex;
   align-self: center;
   align-items: center;
-  font-size: 24px;
+  font-size: 16px;
   cursor: pointer;
 }
 .dailyGameTeam__selector input[type="checkbox"] {
@@ -119,3 +139,4 @@
 .slide-top-leave-to {
   transform: translateY(-100%);
 }
+

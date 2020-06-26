@@ -1499,7 +1499,7 @@ function drupal_send_headers($default_headers = array(), $only_default = FALSE) 
       header($_SERVER['SERVER_PROTOCOL'] . ' ' . $value);
     }
     // Skip headers that have been unset.
-    elseif ($value !== FALSE) {
+    elseif ($value !== FALSE && $name_lower !== 'content-type') {
       header($header_names[$name_lower] . ': ' . $value);
     }
   }

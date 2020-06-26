@@ -1779,6 +1779,13 @@ td.small h3 {
   .block.w50 {
     width: 98%;
   }
+
+  .view-public-pools input, .view-public-pools input:hover {
+    display: inline;
+    float: none;
+    padding: 4px 20px 6px;
+    border: 0;
+  }
   
 }
 
@@ -2060,7 +2067,7 @@ div#block-views-a-picking-template-block .node-match .field-type-entityreference
   border-radius: 10px;
   margin: 20px 0;
 }
-#sidebar .block > h2, #block-views-editor-s-picks-block > h2, .view-shows-in-pool fieldset legend {
+#sidebar .block > h2, #block-views-editor-s-picks-block > h2, .view-shows-in-pool fieldset legend, #block-pwp-daily-daily-game > h2 {
   font-size: 20px;
   color: #fff;
   margin: 0;
@@ -2141,4 +2148,84 @@ div#block-views-a-picking-template-block .node-match .field-type-entityreference
 
 #block-block-14 {
     float:left;
+}
+
+
+.field-name-field-daily-matches > .field-items, .view-daily-picks .view-content  {
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+.field-name-field-daily-matches > .field-items > .field-item, .view-daily-picks .views-row {
+  padding: 10px 20px;
+  border: 1px solid #e1e1e1;
+  background: #f8f8f8;
+  border-radius: 10px;
+  margin: 10px 5px;
+}
+
+.view-daily-picks .view-content h3 {
+  grid-column: 1 / span 2;
+}
+
+.entity-daily-match .field-name-field-daily-teams {
+  padding: 20px;
+  background: white;
+  border-radius: 6px;
+  margin: 10px 0;
+}
+
+.entity-daily-match .field-name-field-daily-teams > .field-label {
+  color: #070f3a;
+  font-size: 17px;
+  font-family: dosis;
+}
+
+.dailyGameRoot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 10vh;
+}
+
+.dailyGameSummary_score {
+  font-size: 16px;
+}
+
+.user, .score, .dailyGameSummary_score .link {
+  text-transform:capitalize;
+  color:#d4180a !important;
+}
+
+.view-public-pools input,
+.view-public-pools input:hover {
+    display: inline;
+    float: none;
+    padding: 4px 20px 6px;
+    border: 0;
+}
+
+.view-public-pools .form-item {
+    display: inline-block;
+    float: none;
+}
+
+.page-user #block-system-main {display:none;}
+
+
+.view-daily-game-winners .view-grouping-content {
+  display: grid;
+  grid-template-columns: repeat(2, 2fr);
+  grid-area: auto;
+} 
+
+.view-daily-game-winners .view-grouping, .view-daily-results .view-grouping {
+  border-bottom: 1px solid #eee;
+  padding: 10px 0px;
+  margin-bottom: 10px;
+}
+
+.view-daily-game-winners .view-grouping-content h3 {
+  grid-column-start: 1;
+  grid-column-end: 3;
 }
