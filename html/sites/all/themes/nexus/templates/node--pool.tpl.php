@@ -84,6 +84,7 @@ $pool_id = $node->nid;
 $pool_locked = boolval($node->field_closed['und'][0]['value']);
 $redirect_url = drupal_get_path_alias(current_path());
 $is_member = og_is_member('node', $pool_id);
+drupal_add_js(drupal_get_path('theme', 'nexus') . '/js/pool.js');
 ?>
 
 <?php if (!$page): ?>
