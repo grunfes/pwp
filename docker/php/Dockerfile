@@ -19,6 +19,10 @@ RUN apk update \
 	&& curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
 	&& rm -rf /tmp/*
 
+RUN composer global require drush/drush:7.*
+RUN touch ~/.profile
+RUN echo export PATH="$HOME/.composer/vendor/bin:$PATH" >> ~/.profile
+
 COPY php.ini /usr/local/etc/php/
 COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
