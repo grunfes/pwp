@@ -278,8 +278,14 @@
           },
           data: function () {
             return {
-              selected: undefined
+              selected: undefined,
+              noContestValue: '-1'
             };
+          },
+          computed: {
+            isNoContest: function () {
+              return this.selected === this.noContestValue;
+            }
           },
           methods: {
             shouldAppend: function (index) {
@@ -287,6 +293,11 @@
             },
             handleTeamInput: function (team) {
               this.$emit('pick', { match: this.id, team: team });
+            },
+            handleNoContestChange: function (e) {
+              this.selected = e.target.checked ? this.noContestValue : undefined;
+
+              this.$emit('pick', { match: this.id, team: this.selected });
             }
           }
         }

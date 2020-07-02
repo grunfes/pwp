@@ -24,51 +24,59 @@ class pwp_daily_data_saver {
    */
   public function save($data) {
     global $user;
-    
+
+    $transaction = db_transaction();
     $dataFetcher = new pwp_daily_data_fetcher();
 
-    $showEntity = $dataFetcher->getDailyShowEntity();
-    $userDailyGameSummary = $dataFetcher->fetchUserDailyGameSummary($showEntity);
+    try {
+      $showEntity = $dataFetcher->getDailyShowEntity();
+      $userDailyGameSummary = $dataFetcher->fetchUserDailyGameSummary($showEntity);
 
-    if ($userDailyGameSummary !== NULL) {
-      return $userDailyGameSummary;
+      if ($userDailyGameSummary !== NULL) {
+        return $userDailyGameSummary;
+      }
+
+      if ($showEntity instanceof Entity && $showEntity->wrapper()
+          ->get('id')
+          ->value() === $data['show']
+      ) {
+        $matches = $showEntity->wrapper()->field_daily_matches->value();
+        $validKeys = [];
+
+        foreach ($matches as $matchEntity) {
+          if (!($matchEntity instanceof Entity)) {
+            throw new \Exception('Not a Valid Entity.');
+          }
+
+          $validKeys[$matchEntity->id] = [];
+          foreach ($matchEntity->wrapper()->field_daily_teams->value() as $team) {
+            $validKeys[$matchEntity->id][] = $team->id;
+          }
+          $validKeys[$matchEntity->id][] = '-1';
+        }
+
+        $savedPicks = array();
+
+        if (!empty($data['picks'])) {
+          foreach ($data['picks'] as $pick) {
+            $this->validatePick($pick, $validKeys);
+            $savedPicks[] = $this->savePick(array_merge(
+              $pick,
+              [
+                'show' => $data['show'],
+                'user' => $user->uid,
+              ]
+            ));
+          }
+        }
+
+        $this->saveResult($showEntity, $savedPicks, $user);
+
+        return $dataFetcher->fetchUserDailyGameSummary($showEntity);
+      }
     }
-
-    if ($showEntity instanceof Entity && $showEntity->wrapper()
-        ->get('id')
-        ->value() === $data['show']) {
-      $matches = $showEntity->wrapper()->field_daily_matches->value();
-      $validKeys = [];
-
-      foreach ($matches as $matchEntity) {
-        if (!($matchEntity instanceof Entity)) {
-          throw new \Exception('Not a Valid Entity.');
-        }
-
-        $validKeys[$matchEntity->id] = [];
-        foreach ($matchEntity->wrapper()->field_daily_teams->value() as $team) {
-          $validKeys[$matchEntity->id][] = $team->id;
-        }
-      }
-
-      $savedPicks = array();
-
-      if (!empty($data['picks'])) {
-        foreach ($data['picks'] as $pick) {
-          $this->validatePick($pick, $validKeys);
-          $savedPicks[] = $this->savePick(array_merge(
-            $pick,
-            [
-              'show' => $data['show'],
-              'user' => $user->uid,
-            ]
-          ));
-        }
-      }
-
-      $this->saveResult($showEntity, $savedPicks, $user);
-
-      return $dataFetcher->fetchUserDailyGameSummary($showEntity);
+    catch (\Exception $exception) {
+      $transaction->rollback();
     }
 
     throw new \Exception("No Daily Show Found({$data['show']}).");
@@ -130,7 +138,12 @@ class pwp_daily_data_saver {
     }
 
     if (isset($pickData['team'])) {
-      $dailyPickWrapper->field_daily_pick_team = $pickData['team'];
+      if ($pickData['team'] === pwp_daily_constants::DAILY_NO_CONTEST_KEY) {
+        $dailyPickWrapper->field_daily_no_contest->set(\pwp_daily_constants::DAILY_NO_CONTEST_TRUE);
+      }
+      else {
+        $dailyPickWrapper->field_daily_pick_team = $pickData['team'];
+      }
     }
     $dailyPickWrapper->save();
     return $dailyPick;
@@ -164,9 +177,18 @@ class pwp_daily_data_saver {
     $score->perfectGame = false;
     $winningMatchesCount = 0;
 
-    $score->points = array_reduce($picks, function ($points, $pick) use (&$winningMatchesCount) {
+    $score->points = array_reduce($picks, function ($points, $pick) use (&$winningMatchesCount, $show) {
       $pickWrapper = $pick->wrapper();
-      if ($pickWrapper->field_daily_pick_team->value()->wrapper()->field_daily_winning_team->value()) {
+      $matchWrapper = $pickWrapper->field_daily_pick_match->value()->wrapper();
+      $isNoContestMatch = array_reduce($matchWrapper->field_daily_teams->value(), function ($noContest, $team) {
+          $winningTeam = boolval($team->wrapper()->field_daily_winning_team->value());
+          return $noContest && !$winningTeam;
+      }, TRUE);
+
+      if (
+        ($isNoContestMatch && boolval($pickWrapper->field_daily_no_contest->value())) ||
+        ($pickWrapper->field_daily_pick_team->value() && $pickWrapper->field_daily_pick_team->value()->wrapper()->field_daily_winning_team->value())
+      ) {
         $winningMatchesCount += 1;
         return $points + floatval($pickWrapper->field_daily_pick_match->value()->wrapper()->field_point_to_earn->value());
       }

@@ -40,24 +40,29 @@ class pwp_daily_data_fetcher {
         $pickData = new stdClass();
         $pickWrapper = $pick->wrapper();
         $pickMatch = $pickWrapper->field_daily_pick_match->value()->wrapper();
-        $userPickWrapper = $pickWrapper->field_daily_pick_team->value()->wrapper();
 
         $pickData->match = $pickMatch->title->value();
         $pickData->points = floatval($pickMatch->field_point_to_earn->value());
-        $pickData->teams = array_map(function ($team) use ($userPickWrapper) {
-          $teamData = new stdClass();
-          $teamWrapper = $team->wrapper();
-          $teamData->title = $teamWrapper->title->value();
-          $teamData->userPick = $userPickWrapper->id->value() == $teamWrapper->id->value();
-          $teamData->winningTeam = boolval($teamWrapper->field_daily_winning_team->value());
-          $teamData->wrestlers = array_map(function ($wrestler) {
-            return $wrestler->title;
-          }, $teamWrapper->field_daily_wrestlers->value());
+        $pickData->teams = [];
 
-          return $teamData;
-        } ,$pickMatch->field_daily_teams->value());
+        if (boolval($pickWrapper->field_daily_no_contest->value())) {
+          $pickData->notContest = TRUE;
+        }
+        else {
+          $userPickWrapper = $pickWrapper->field_daily_pick_team->value()->wrapper();
+          $pickData->teams = array_map(function ($team) use ($userPickWrapper) {
+            $teamData = new stdClass();
+            $teamWrapper = $team->wrapper();
+            $teamData->title = $teamWrapper->title->value();
+            $teamData->userPick = $userPickWrapper->id->value() == $teamWrapper->id->value();
+            $teamData->winningTeam = boolval($teamWrapper->field_daily_winning_team->value());
+            $teamData->wrestlers = array_map(function ($wrestler) {
+              return $wrestler->title;
+            }, $teamWrapper->field_daily_wrestlers->value());
 
-        $pickTeam = $pickWrapper->field_daily_pick_team->value();
+            return $teamData;
+          }, $pickMatch->field_daily_teams->value());
+        }
 
         return $pickData;
       }, $entityWrapper->field_daily_picks_reference->value());
@@ -147,17 +152,20 @@ class pwp_daily_data_fetcher {
    * @throws \Exception
    */
   public function getDailyShowEntity() {
-    $now = new \DateTime();
-    $query = new EntityFieldQuery();
-    $query
-      ->entityCondition('entity_type', 'daily_show')
-      ->fieldCondition('field_daily_game_date', 'value', $now->format('Y-m-d 00:00:00'));
+    try {
+      $dailyGameId = variable_get(\pwp_daily_constants::DAILY_GAME_VARIABLE);
+      $entities = [];
 
-    $result = $query->execute();
+      if (is_int($dailyGameId)) {
+        $entities = entity_load('daily_show', [$dailyGameId]);
+      }
 
-    if (isset($result['daily_show'])) {
-      $showEntities = entity_load('daily_show', array_keys($result['daily_show']));
-      return array_shift($showEntities);
+      if (isset($entities)) {
+        return array_shift($entities);
+      }
+    }
+    catch (\Exception $exception) {
+      watchdog('pwp_daily', $exception->getMessage(), NULL, WATCHDOG_WARNING);
     }
 
     return NULL;

@@ -105,3 +105,46 @@ function pwp_daily_field_widget_form_alter(&$element, &$form_state, $context) {
     }
   }
 }
+
+/**
+ * Implements hook_cron().
+ */
+function pwp_daily_cron() {
+  $storedDateValue = variable_get(\pwp_daily_constants::DAILY_GAME_DATE_VARIABLE);
+  $now = new \DateObject();
+  $stored = $storedDateValue === NULL ? $now : new \DateObject($storedDateValue);
+
+  if (!$storedDateValue || intval($now->format('N')) !== intval($stored->format('N'))) {
+    try {
+      if (
+        ($dailyGame = variable_get(\pwp_daily_constants::DAILY_GAME_VARIABLE)) &&
+        ($dailyShow = entity_load_single('daily_show', $dailyGame))
+      ) {
+        $dailyShowWrapper = $dailyShow->wrapper();
+        $dailyShowWrapper->field_daily_closed->set('1');
+        $dailyShowWrapper->save();
+      }
+
+      $query = new \EntityFieldQuery();
+      $query
+        ->entityCondition('entity_type', 'daily_show')
+        ->fieldCondition('field_daily_closed', 'value', '0');
+
+      $result = $query->execute();
+      if (isset($result['daily_show'])) {
+        $showEntityIds = array_keys($result['daily_show']);
+        $rndIdx = rand(0, count($showEntityIds) - 1);
+
+        variable_set(\pwp_daily_constants::DAILY_GAME_VARIABLE, $showEntityIds[$rndIdx]);
+        variable_set(\pwp_daily_constants::DAILY_GAME_DATE_VARIABLE, $now->format('c'));
+
+        watchdog('pwp_daily', t('Daily Game @id set.', array(
+          '@id' => $showEntityIds[$rndIdx],
+        )));
+      }
+    }
+    catch (\Exception $exception) {
+      watchdog('pwp_daily', $exception->getMessage(), NULL, WATCHDOG_WARNING);
+    }
+  }
+}

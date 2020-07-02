@@ -26,7 +26,7 @@
           :user="gameData.user"
           :summary="summary"
           @game-start="handleGameStart"
-          @game-end="handleGameEnd" 
+          @game-end="handleGameEnd"
         />
       </transition>
     </template>
@@ -127,6 +127,16 @@
           </div>
         </template>
       </team>
+
+      <label>
+        <input
+          type="checkbox"
+          :checked="isNoContest"
+          :value="noContestValue"
+          @change="handleNoContestChange"
+        />
+        No Contest
+      </label>
     </div>
   </div>
 </script>

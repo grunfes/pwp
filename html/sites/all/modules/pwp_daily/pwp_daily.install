@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * Implements hook_update_N().
+ *
+ * Initializes field_daily_closed field on daily_show entity to `0`.
+ *
+ * @throws DrupalUpdateException
+ */
+function pwp_daily_update_7000(&$sandbox) {
+  $transaction = db_transaction();
+
+  try {
+    $entities = entity_load('daily_show');
+
+    foreach ($entities as $entity) {
+      $wrapper = entity_metadata_wrapper('daily_show', $entity);
+      $wrapper->field_daily_closed->set('0');
+      $wrapper->save();
+    }
+
+    return t('Daily show entities updated. Entities updated: @number', array(
+      '@number' => count($entities),
+    ));
+  }
+  catch (\Exception $exception) {
+    $transaction->rollback();
+    throw new \DrupalUpdateException($exception->getMessage(), $exception->getCode(), $exception);
+  }
+}
