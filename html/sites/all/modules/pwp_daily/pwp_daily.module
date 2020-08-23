@@ -114,7 +114,7 @@ function pwp_daily_cron() {
   $now = new \DateObject();
   $stored = $storedDateValue === NULL ? $now : new \DateObject($storedDateValue);
 
-  if (!$storedDateValue || intval($now->format('N')) !== intval($stored->format('N'))) {
+  if (!$storedDateValue || $now->format('Ymd') !== $stored->format('Ymd')) {
     try {
       if (
         ($dailyGame = variable_get(\pwp_daily_constants::DAILY_GAME_VARIABLE)) &&
